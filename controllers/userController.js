@@ -27,7 +27,7 @@ const login = (req, res) => {
             return res.status(401).json({ status: 401, message: "invalid_email_or_password", data: null });
         }
 
-        // JWT 토큰 생성
+        // JWT 토큰 생성 
         const token = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET_KEY, { expiresIn: '1h' });
 
         // 성공 응답
