@@ -21,4 +21,31 @@ const verifyPassword = (plainPassword, hashedPassword) => {
     return bcrypt.compareSync(plainPassword, hashedPassword);
 };
 
-module.exports = { findUserByEmail, verifyPassword };
+//new
+const saveUsers = (users) => {
+    fs.writeFileSync(dataPath, JSON.stringify(users, null, 2));
+};
+
+const findUserByNickname = (nickname) => {
+    const users = getUsers();
+    return users.find(user => user.nickname === nickname);
+};
+
+const saveUser = (userData) => {
+    const users = getUsers();
+    const newUser = {
+        id: users.length + 1,
+        email: userData.email,
+        password: userData.password,
+        nickname: userData.nickname,
+        profile_image_path: userData.profileImagePath,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+        deleted_at: null,
+    };
+    users.push(newUser);
+    saveUsers(users);
+    return newUser.id;
+};
+
+module.exports = { findUserByEmail, verifyPassword, findUserByNickname, saveUser };

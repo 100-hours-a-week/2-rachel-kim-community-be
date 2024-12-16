@@ -1,8 +1,9 @@
 /* userController.js */
-
-const { findUserByEmail, verifyPassword } = require('../models/userModel');
+const { findUserByEmail, verifyPassword, findUserByNickname, saveUser } = require('../models/userModel');
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 
+// 로그인 응답
 const login = (req, res) => {
     const { email, password } = req.body;
 
@@ -50,4 +51,111 @@ const login = (req, res) => {
     }
 };
 
-module.exports = { login };
+// 이메일 중복 체크
+const checkEmailExists = (req, res) => {
+    const { email } = req.query;
+
+    if (!email) {
+        return res.status(400).json({
+            status: 400,
+            message: "required_email",
+            data: null,
+        });
+    }
+
+    try {
+        const user = findUserByEmail(email);
+        if (user) {
+            return res.status(409).json({
+                status: 409,
+                message: "already_exist_email",
+                data: null,
+            });
+        }
+
+        return res.status(200).json({
+            status: 200,
+            message: "available_email",
+            data: null,
+        });
+    } catch (error) {
+        console.error("이메일 중복 체크 오류:", error);
+        return res.status(500).json({
+            status: 500,
+            message: "internal_server_error",
+            data: null,
+        });
+    }
+};
+
+// 닉네임 중복 체크
+const checkNicknameExists = (req, res) => {
+    const { nickname } = req.query;
+
+    if (!nickname) {
+        return res.status(400).json({
+            status: 400,
+            message: "required_nickname",
+            data: null,
+        });
+    }
+
+    try {
+        const user = findUserByNickname(nickname);
+        if (user) {
+            return res.status(409).json({
+                status: 409,
+                message: "already_exist_nickname",
+                data: null,
+            });
+        }
+
+        return res.status(200).json({
+            status: 200,
+            message: "available_nickname",
+            data: null,
+        });
+    } catch (error) {
+        console.error("닉네임 중복 체크 오류:", error);
+        return res.status(500).json({
+            status: 500,
+            message: "internal_server_error",
+            data: null,
+        });
+    }
+};
+
+// 회원가입 응답
+const register = async (req, res) => {
+    const { email, password, nickname } = req.body;
+    const profileImagePath = req.file ? `/public/image/profile/${req.file.filename}` : null;
+
+    // 필수 입력값 검증
+    if (!email) return res.status(400).json({ status: 400, message: "required_email", data: null });
+    if (!password) return res.status(400).json({ status: 400, message: "required_password", data: null });
+    if (!nickname) return res.status(400).json({ status: 400, message: "required_nickname", data: null });
+
+    try {
+        // 비밀번호 암호화
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        // 사용자 저장
+        const userId = saveUser({
+            email,
+            password: hashedPassword,
+            nickname,
+            profileImagePath,
+        });
+
+        res.status(201).json({
+            status: 201,
+            message: "register_success",
+            data: { userId, profile_image_id: userId }, // 임의로 userId를 이미지 ID로 설정
+        });
+    } catch (error) {
+        console.error('회원가입 처리 오류:', error);
+        res.status(500).json({ status: 500, message: "internal_server_error", data: null });
+    }
+};
+
+module.exports = { login, checkEmailExists, checkNicknameExists, register };
