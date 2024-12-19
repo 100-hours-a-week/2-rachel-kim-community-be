@@ -1,54 +1,34 @@
 [
-    {
-        "post_id": 1,
-        "post_title": "게시글 제목 1",
-        "post_content": "게시글 내용 1",
-        "image_path": "/public/images/posts/post.jpeg",
-        "file_id": 1,
-        "user_id": 1,
-        "nickname": "사용자1",
-        "created_at": "2024-12-01T10:00:00.000Z",
-        "updated_at": "2024-12-01T10:00:00.000Z",
-        "deleted_at": null,
-        "likes": 12000,
-        "comment_count": 300000,
-        "views": 12000,
-        "profile_image_path": "/public/image/profile/default-profile.jpeg",
-        "comments": [
-            {
-                "comment_id": 1,
-                "content": "댓글 내용입니다.",
-                "user_id": 1,
-                "author_name": "댓글 작성자1",
-                "author_photo": "/public/images/profile/default-profile.jpeg",
-                "created_at": "2024-06-01T10:00:00.000Z"
-            }
-        ]
-    },
-    {
-        "post_id": 2,
-        "post_title": "게시글 제목 2",
-        "post_content": "게시글 내용 2",
-        "image_path": "/public/images/posts/post.jpeg",
-        "file_id": 2,
-        "user_id": 2,
-        "nickname": "사용자2",
-        "created_at": "2024-12-02T11:00:00.000Z",
-        "updated_at": "2024-12-02T11:00:00.000Z",
-        "deleted_at": null,
-        "likes": 20,  
-        "comment_count": 5,
-        "views": 200,
-        "profile_image_path": "/public/image/profile/default-profile.jpeg",
-        "comments": [
-            {
-                "comment_id": 2,
-                "content": "댓글 내용입니다.",
-                "user_id": 2,
-                "author_name": "댓글 작성자2",
-                "author_photo": "/public/images/profile/default-profile.jpeg",
-                "created_at": "2024-06-02T10:00:00.000Z"
-            }
-        ]
-    }
+  {
+    "post_id": 1,
+    "post_title": "게시글 제목 1",
+    "post_content": "게시글 내용 1",
+    "post_image_path": "/public/image/posts/post.jpeg",
+    "file_id": 1,
+    "user_id": 1,
+    "nickname": "사용자1",
+    "created_at": "2024-12-01T10:00:00.000Z",
+    "updated_at": "2024-12-01T10:00:00.000Z",
+    "deleted_at": null,
+    "likes": 12000,
+    "comment_count": 300000,
+    "views": 12000,
+    "profile_image_path": "/public/image/profile/default-profile.jpeg"
+  },
+  {
+    "post_id": 2,
+    "post_title": "게시글 제목 2",
+    "post_content": "게시글 내용 2",
+    "post_image_path": "/public/image/posts/post.jpeg",
+    "file_id": 2,
+    "user_id": 2,
+    "nickname": "사용자2",
+    "created_at": "2024-12-02T11:00:00.000Z",
+    "updated_at": "2024-12-02T11:00:00.000Z",
+    "deleted_at": null,
+    "likes": 20,
+    "comment_count": 5,
+    "views": 200,
+    "profile_image_path": "/public/image/profile/default-profile.jpeg"
+  }
 ]

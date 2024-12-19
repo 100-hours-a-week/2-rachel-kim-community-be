@@ -34,7 +34,7 @@ const findUserByNickname = (nickname) => {
 const saveUser = (userData) => {
     const users = getUsers();
     const newUser = {
-        id: users.length + 1,
+        user_id: users.length + 1,
         email: userData.email,
         password: userData.password,
         nickname: userData.nickname,

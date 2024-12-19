@@ -29,7 +29,16 @@ const login = (req, res) => {
         }
 
         // JWT 토큰 생성 
-        const token = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET_KEY, { expiresIn: '1h' });
+        const token = jwt.sign(
+            {
+                id: user.id,
+                email: user.email,
+                nickname: user.nickname, 
+                profile_image_path: user.profile_image_path, 
+            },
+            process.env.JWT_SECRET_KEY,
+            { expiresIn: '1h' }
+        );
 
         // 성공 응답
         res.json({
