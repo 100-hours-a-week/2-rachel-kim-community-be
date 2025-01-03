@@ -30,5 +30,19 @@
     "comment_count": 5,
     "views": 200,
     "profile_image_path": "/public/image/profile/default-profile.jpeg"
+  },
+  {
+    "post_id": 3,
+    "user_id": 3,
+    "post_title": "게시글 추가 테스트 (이미지 포함)",
+    "post_content": "귀여운 헬로키티",
+    "post_image_path": "/public/image/posts/1735884418863-31063400-IMG_6198.jpeg",
+    "nickname": "레이체리",
+    "profile_image_path": "/public/image/profile/1735808471270-630925086-IMG_8073.jpeg",
+    "created_at": "2025-01-03T06:06:58.868Z",
+    "updated_at": "2025-01-03T06:06:58.868Z",
+    "likes": 0,
+    "views": 0,
+    "comment_count": 0
   }
 ]

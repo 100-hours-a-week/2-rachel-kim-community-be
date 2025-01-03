@@ -12,16 +12,14 @@ const getUsers = () => {
 
 const findUserByEmail = (email) => {
     const users = getUsers();
-    console.log('사용자 목록:', users);
     return users.find(user => user.email === email);
 };
 
-// User1: Password@123, User2: Secure#456
+// User1: Password@123, User2: Secure#456, User3: Test0910@
 const verifyPassword = (plainPassword, hashedPassword) => {
     return bcrypt.compareSync(plainPassword, hashedPassword);
 };
 
-//new
 const saveUsers = (users) => {
     fs.writeFileSync(dataPath, JSON.stringify(users, null, 2));
 };
@@ -45,7 +43,7 @@ const saveUser = (userData) => {
     };
     users.push(newUser);
     saveUsers(users);
-    return newUser.id;
+    return newUser.user_id;
 };
 
 module.exports = { findUserByEmail, verifyPassword, findUserByNickname, saveUser };

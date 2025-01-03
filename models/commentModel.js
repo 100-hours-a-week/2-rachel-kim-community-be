@@ -19,11 +19,8 @@ const getCommentsByPostId = (post_id) => {
 };
 
 // 댓글 등록
-const addComment = (postId, content, userId, userNickname, userProfileImage) => {
-    console.log('addComment 호출됨:', { postId, content, userId });
-    
+const addComment = (postId, content, userId, userNickname, userProfileImage) => {    
     const comments = JSON.parse(fs.readFileSync(dataPath, 'utf-8')); // 파일에서 댓글 데이터 읽기
-    console.log('comments 데이터:', comments);
 
     const newComment = {
         comment_id: comments.length + 1,
@@ -36,10 +33,7 @@ const addComment = (postId, content, userId, userNickname, userProfileImage) => 
     };
 
     comments.push(newComment); // 댓글 추가
-    console.log('댓글 추가 후 comments 데이터:', comments);
-
     fs.writeFileSync(dataPath, JSON.stringify(comments, null, 2), 'utf-8'); // 파일 저장
-    console.log('파일에 저장 완료:', comments);
 
     return newComment;
 };
@@ -96,7 +90,6 @@ const deleteComment = (post_id, comment_id, user_id) => {
 
     // 변경된 데이터를 파일에 저장
     fs.writeFileSync(dataPath, JSON.stringify(comments, null, 2), 'utf-8'); // 파일 저장
-    console.log(`댓글 삭제 완료: post_id=${post_id}, comment_id=${comment_id}`);
 };
 
 module.exports = { getCommentsByPostId, addComment, updateComment, deleteComment };

@@ -1,12 +1,16 @@
 /* postController.js */
 const { getPosts, getPostById, deletePost } = require('../models/postModel');
+const fs = require('fs');
+const path = require('path');
+const posts = require('../data/posts.json');
+const users = require('../data/users.json'); // 사용자 데이터 추가
+
 
 // 게시글 목록 조회
 const getPostsList = (req, res) => {
     try {
         // 데이터 가져오기
         const posts = getPosts();
-        console.log('getPosts에서 반환된 데이터:', posts);
 
         // 게시글 데이터가 없는 경우
         if (!posts || posts.length === 0) {
@@ -39,7 +43,6 @@ const getPostsList = (req, res) => {
             }))
         };
 
-        console.log('응답 데이터:', response);
         res.status(200).json(response);
     } catch (error) {
         console.error("게시글 목록 조회 오류:", error);
@@ -67,7 +70,6 @@ const getPostDetail = (req, res) => {
 
         return res.status(200).json({ status: 200, message: "get_post_success", data: post });
     } catch (error) {
-        console.error("게시글 조회 오류:", error);
         return res.status(500).json({ status: 500, message: "internal_server_error", data: null });
     }
 }   
@@ -75,7 +77,7 @@ const getPostDetail = (req, res) => {
 // 게시글 삭제
 const removePost = (req, res) => {
     const { post_id } = req.params;
-    const { id } = req.user; 
+    const { user_id } = req.user; 
 
     if (!post_id) {
         return res.status(400).json({ status: 400, message: "invalid_post_id", data: null });
@@ -87,17 +89,66 @@ const removePost = (req, res) => {
             return res.status(404).json({ status: 404, message: "not_a_single_post", data: null });
         }
 
-        if (post.id !== id) {
+        if (post.user_id !== user_id) {
             return res.status(403).json({ status: 403, message: "required_permission", data: null });
         }
 
         deletePost(post_id);
         return res.status(200).json({ status: 200, message: "delete_post_success", data: null });
     } catch (error) {
-        console.error("게시글 삭제 오류:", error.message);
-        return res.status(500).json({ status: 500, message: "Internal server error", data: null });
+        return res.status(500).json({ status: 500, message: "internal_server_error", data: null });
+    }
+}; 
+
+// 게시글 추가
+const createPost = (req, res) => {
+    const { postTitle, postContent } = req.body;
+    const { file } = req;
+    const { user_id } = req.user;
+
+    if (!postTitle || !postContent) {
+        return res.status(400).json({ status: 400, message: "invalid_request", data: null});
+    }
+    if (postTitle.length > 26) {
+        return res.status(400).json({ status: 400, message: "invalid_post_title_length", data: null });
+    }
+    if (!user_id) {
+        return res.status(401).json({ status: 401, message: "required_authorization", data: null });
+    }
+    // 사용자 정보 매핑
+    const user = users.find(u => u.user_id === user_id);
+    if (!user) {
+        return res.status(404).json({ status: 404, message: "user_not_found", data: null });
+    }
+
+    const newPost = {
+        post_id: posts.length ? posts[posts.length - 1].post_id + 1 : 1,
+        user_id: user_id,
+        post_title: postTitle,
+        post_content: postContent,
+        post_image_path: file ? `/public/image/posts/${file.filename}` : null,
+        nickname: user.nickname,
+        profile_image_path: user.profile_image_path,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+        likes: 0, // 기본값
+        views: 0, // 기본값
+        comment_count: 0 // 기본값
+    };
+
+    try {
+        posts.push(newPost);
+        // JSON 파일 업데이트
+        fs.writeFileSync(path.join(__dirname, '../data/posts.json'), JSON.stringify(posts, null, 2), 'utf-8');
+    
+        return res.status(201).json({
+            status: 201,
+            message: "write_post_success",
+            data: { post_id: newPost.post_id }
+        });
+    } catch (error) {
+        return res.status(500).json({ status: 500, message: "failed_to_write_post", data: null });
     }
 };
 
-
-module.exports = { getPostsList, getPostDetail, removePost };
+module.exports = { getPostsList, getPostDetail, removePost, createPost };

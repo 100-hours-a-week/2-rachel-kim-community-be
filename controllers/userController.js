@@ -31,7 +31,7 @@ const login = (req, res) => {
         // JWT 토큰 생성 
         const token = jwt.sign(
             {
-                id: user.id,
+                user_id: user.user_id,
                 email: user.email,
                 nickname: user.nickname, 
                 profile_image_path: user.profile_image_path, 
@@ -39,13 +39,14 @@ const login = (req, res) => {
             process.env.JWT_SECRET_KEY,
             { expiresIn: '1h' }
         );
+        console.log('JWT 생성 데이터:', { user_id: user.user_id, email: user.email });
 
         // 성공 응답
         res.json({
             status: 200,
             message: "login_success",
             data: {
-                user_id: user.id,
+                user_id: user.user_id,
                 email: user.email,
                 nickname: user.nickname,
                 created_at: user.created_at,
@@ -55,7 +56,6 @@ const login = (req, res) => {
             },
         });
     } catch (error) {
-        console.error('로그인 처리 오류:', error);
         res.status(500).json({ status: 500, message: "internal_server_error", data: null });
     }
 };
@@ -88,7 +88,6 @@ const checkEmailExists = (req, res) => {
             data: null,
         });
     } catch (error) {
-        console.error("이메일 중복 체크 오류:", error);
         return res.status(500).json({
             status: 500,
             message: "internal_server_error",
@@ -125,7 +124,6 @@ const checkNicknameExists = (req, res) => {
             data: null,
         });
     } catch (error) {
-        console.error("닉네임 중복 체크 오류:", error);
         return res.status(500).json({
             status: 500,
             message: "internal_server_error",
@@ -162,7 +160,6 @@ const register = async (req, res) => {
             data: { userId, profile_image_id: userId }, // 임의로 userId를 이미지 ID로 설정
         });
     } catch (error) {
-        console.error('회원가입 처리 오류:', error);
         res.status(500).json({ status: 500, message: "internal_server_error", data: null });
     }
 };

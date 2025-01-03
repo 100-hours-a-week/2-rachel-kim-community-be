@@ -1,8 +1,9 @@
 /* postRoutes.js */
 const express = require('express');
 const { authenticateToken } = require('../middlewares/authMiddleware');
-const { getPostsList, getPostDetail, removePost } = require('../controllers/postController');
+const { getPostsList, getPostDetail, removePost, createPost } = require('../controllers/postController');
 const router = express.Router();
+const upload = require('../middlewares/upload');
 
 // 게시글 목록 조회
 router.get('/', getPostsList);
@@ -10,5 +11,7 @@ router.get('/', getPostsList);
 router.get('/:post_id', getPostDetail); 
 // 게시글 삭제
 router.delete('/:post_id', authenticateToken, removePost); 
+// 게시글 추가
+router.post('/new', authenticateToken, upload.single('attachFilePath'), createPost);
 
 module.exports = router;
