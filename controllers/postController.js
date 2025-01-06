@@ -151,4 +151,55 @@ const createPost = (req, res) => {
     }
 };
 
-module.exports = { getPostsList, getPostDetail, removePost, createPost };
+// 게시글 수정
+const updatePost = (req, res) => {
+    const { post_id } = req.params;
+    const { postTitle, postContent, existingImagePath } = req.body;
+    const { file } = req;   // 응답에서 처리
+    const { user_id } = req.user;
+
+    if (!post_id || !postTitle || !postContent) {
+        return res.status(400).json({ status: 400, message: "invalid_request", data: null });
+    }
+    if (postTitle.length > 26) {
+        return res.status(400).json({ status: 400, message: "invalid_post_title_length", data: null });
+    }
+
+    try {
+        const postIndex = posts.findIndex(post => post.post_id === Number(post_id));
+        if (postIndex === -1) {
+            return res.status(404).json({ status: 404, message: "not_a_single_post", data: null });
+        }
+
+        const post = posts[postIndex];
+        if (post.user_id !== user_id) {
+            return res.status(403).json({ status: 403, message: "required_permission", data: null });
+        }
+
+        // 파일 경로 처리
+        const updatedImagePath = file 
+        ? `/public/image/posts/${file.storedFilename}` // 새 파일이 업로드된 경우
+        : existingImagePath || post.post_image_path;   // 기존 경로 유지
+        
+        // 게시글 업데이트
+        posts[postIndex] = {
+            ...post,
+            post_title: postTitle,
+            post_content: postContent,
+            post_image_path: updatedImagePath,
+            updated_at: new Date().toISOString(),
+        };
+
+        fs.writeFileSync(path.join(__dirname, '../data/posts.json'), JSON.stringify(posts, null, 2), 'utf-8');
+
+        return res.status(200).json({
+            status: 200,
+            message: "update_post_success",
+            data: { post_id: post.post_id },
+        });
+    } catch (error) {
+        return res.status(500).json({ status: 500, message: "internal_server_error", data: null });
+    }
+};
+
+module.exports = { getPostsList, getPostDetail, removePost, createPost, updatePost };

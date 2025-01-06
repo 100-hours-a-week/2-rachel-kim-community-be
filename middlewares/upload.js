@@ -14,7 +14,8 @@ const storage = multer.diskStorage({
     },
     filename: (req, file, cb) => {
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-        cb(null, `${uniqueSuffix}-${file.originalname}`);
+        file.storedFilename = `${uniqueSuffix}-${file.originalname}`; // 저장된 파일명
+        cb(null, file.storedFilename);    
     },
 });
 

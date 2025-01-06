@@ -27,16 +27,12 @@ const getPostById = (post_id) => {
 };
 
 // 게시글 삭제
-const deletePost = (post_id) => {
-    console.log("삭제 요청 post_id:", post_id);
-    
+const deletePost = (post_id) => {    
     const index = posts.findIndex(post => post.post_id === Number(post_id));
-    console.log("찾은 인덱스:", index);
 
     if (index !== -1) {
         posts.splice(index, 1);
         fs.writeFileSync(dataPath, JSON.stringify(posts, null, 2), 'utf-8'); // JSON 파일 업데이트
-        console.log("게시글 삭제 완료");
     } else {
         throw new Error("게시글을 찾을 수 없습니다.");
     }
