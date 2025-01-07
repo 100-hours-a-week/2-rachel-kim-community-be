@@ -1,6 +1,6 @@
 /* userRoutes */
 const express = require('express');
-const { login, checkEmailExists, checkNicknameExists, register, getUserById, updateUser, deleteUser } = require('../controllers/userController');
+const { login, checkEmailExists, checkNicknameExists, register, getUserById, updateUser, deleteUser, changePassword } = require('../controllers/userController');
 const upload = require('../middlewares/upload');
 const { authenticateToken } = require('../middlewares/authMiddleware');
 const router = express.Router();
@@ -19,5 +19,7 @@ router.get('/:user_id', authenticateToken, getUserById);
 router.patch('/:user_id', authenticateToken, upload.single('profilePhoto'), updateUser);
 // 회원 정보 삭제
 router.delete('/:user_id', authenticateToken, deleteUser);
+// 비밀번호 변경
+router.patch('/:user_id/password', authenticateToken, changePassword);
 
 module.exports = router;

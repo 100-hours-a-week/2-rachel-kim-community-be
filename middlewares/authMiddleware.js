@@ -13,8 +13,6 @@ const authenticateToken = (req, res, next) => {
     try {
         // 토큰 검증, 디코딩
         const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
-        // 디버깅
-        console.log('디코딩된 토큰:', decoded);
 
         const user = users.find(user => user.user_id === decoded.user_id);
         if (!user) {
@@ -23,7 +21,7 @@ const authenticateToken = (req, res, next) => {
         }
 
         // 사용자 정보를 req.user에 추가
-        req.user = user; 
+        req.user = user;
         next();
     } catch (error) {
         console.error('JWT 인증 실패:', error.message);

@@ -2,8 +2,6 @@
 const { findUserByEmail, verifyPassword, findUserByNickname, saveUser, getUsers, saveUsers } = require('../models/userModel');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const fs = require('fs');
-const path = require('path');
 const { updatePostsByUserId } = require('../models/postModel');
 const { updateCommentsByUserId } = require('../models/commentModel');
 
@@ -293,4 +291,50 @@ const deleteUser = (req, res) => {
     }
 };
 
-module.exports = { login, checkEmailExists, checkNicknameExists, register, updateUser, getUserById, deleteUser };
+// 비밀번호 변경
+const changePassword = (req, res) => {
+    const { user_id } = req.params;
+    const { password, confirmPassword } = req.body;
+    const { user_id: authenticatedUserId } = req.user;
+
+    if (!user_id || isNaN(user_id)) {
+        return res.status(400).json({ status: 400, message: "invalid_user_id", data: null });
+    }
+    if (!password || !confirmPassword) {
+        return res.status(400).json({ status: 400, message: "empty_password_field", data: null });
+    }
+    if (password !== confirmPassword) {
+        return res.status(400).json({ status: 400, message: "passwords_do_not_match", data: null });
+    }
+    if (Number(user_id) !== authenticatedUserId) {
+        return res.status(403).json({ status: 403, message: "required_permission", data: null });
+    }
+
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/;
+    if (!passwordRegex.test(password)) {
+        return res.status(400).json({ status: 400, message: "invalid_password_format", data: null });
+    }
+
+    const users = getUsers();
+    const userIndex = users.findIndex(user => user.user_id === Number(user_id));
+
+    if (userIndex === -1) {
+        return res.status(404).json({ status: 404, message: "not_found_user", data: null });
+    }
+
+    // 비밀번호 해시화
+    bcrypt.hash(password, 10)
+        .then(hashedPassword => {
+            users[userIndex].password = hashedPassword;
+            users[userIndex].updated_at = new Date().toISOString();
+            saveUsers(users);
+
+            res.status(201).json({ status: 201, message: "change_user_password_success", data: null });
+        })
+        .catch(error => {
+            console.error('비밀번호 해싱 실패:', error.message);
+            res.status(500).json({ status: 500, message: "internal_server_error", data: null });
+        });
+};
+
+module.exports = { login, checkEmailExists, checkNicknameExists, register, updateUser, getUserById, deleteUser, changePassword };
