@@ -13,18 +13,18 @@
     "post_id": 2,
     "comment_content": "반가워용",
     "user_id": 3,
-    "nickname": "레이체리 수정",
+    "nickname": "레이체리",
     "created_at": "2025-01-02T16:10:19.276Z",
-    "profile_image_path": "/public/image/profile/1736229464558-71293987-IMG_0418.jpeg"
+    "profile_image_path": "/public/image/profile/1736232024240-647705081-IMG_8137.jpeg"
   },
   {
     "comment_id": 4,
     "post_id": 3,
     "comment_content": "여기에 댓글도 수정해서 달아보야용",
     "user_id": 3,
-    "nickname": "레이체리 수정",
+    "nickname": "레이체리",
     "created_at": "2025-01-03T09:09:40.896Z",
-    "profile_image_path": "/public/image/profile/1736229464558-71293987-IMG_0418.jpeg",
+    "profile_image_path": "/public/image/profile/1736232024240-647705081-IMG_8137.jpeg",
     "updated_at": "2025-01-03T09:09:45.904Z"
   },
   {
@@ -32,8 +32,8 @@
     "post_id": 4,
     "comment_content": "히히",
     "user_id": 3,
-    "nickname": "레이체리 수정",
+    "nickname": "레이체리",
     "created_at": "2025-01-06T01:47:50.715Z",
-    "profile_image_path": "/public/image/profile/1736229464558-71293987-IMG_0418.jpeg"
+    "profile_image_path": "/public/image/profile/1736232024240-647705081-IMG_8137.jpeg"
   }
 ]

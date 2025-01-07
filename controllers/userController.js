@@ -258,6 +258,39 @@ const updateUser = (req, res) => {
     } catch (error) {
         return res.status(500).json({ status: 500, message: "internal_server_error", data: null });
     }
-}
+};
 
-module.exports = { login, checkEmailExists, checkNicknameExists, register, updateUser, getUserById };
+// 회원 정보 삭제
+const deleteUser = (req, res) => {
+    const { user_id } = req.params;
+    const { user_id: authenticatedUserId } = req.user;
+
+    if (!user_id || isNaN(user_id)) {
+        return res.status(400).json({ status: 400, message: "invalid_user_id", data: null });
+    }
+    if (Number(user_id) !== authenticatedUserId) {
+        return res.status(403).json({ status: 403, message: "required_permission", data: null });
+    }
+
+    try {
+        const users = getUsers();
+        const userIndex = users.findIndex(user => user.user_id === Number(user_id));
+
+        if (userIndex === -1) {
+            return res.status(404).json({ status: 404, message: "not_found_user", data: null });
+        }
+
+        // 유저를 삭제 상태로 업데이트 (소프트 삭제)
+        // users[userIndex].deleted_at = new Date().toISOString();
+
+        // 배열에서 유저를 제거 (하드 삭제)
+        users.splice(userIndex, 1);
+        saveUsers(users);
+        
+        return res.status(200).json({ status: 200, message: "delete_user_data_success", data: null });
+    } catch (error) {
+        return res.status(500).json({ status: 500, message: "internal_server_error", data: null });
+    }
+};
+
+module.exports = { login, checkEmailExists, checkNicknameExists, register, updateUser, getUserById, deleteUser };
