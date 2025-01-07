@@ -46,4 +46,4 @@ const saveUser = (userData) => {
     return newUser.user_id;
 };
 
-module.exports = { findUserByEmail, verifyPassword, findUserByNickname, saveUser };
+module.exports = { getUsers, findUserByEmail, verifyPassword, saveUsers, findUserByNickname, saveUser };

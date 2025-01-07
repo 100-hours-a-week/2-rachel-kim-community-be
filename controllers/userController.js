@@ -1,7 +1,11 @@
 /* userController.js */
-const { findUserByEmail, verifyPassword, findUserByNickname, saveUser } = require('../models/userModel');
+const { findUserByEmail, verifyPassword, findUserByNickname, saveUser, getUsers, saveUsers } = require('../models/userModel');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
+const fs = require('fs');
+const path = require('path');
+const { updatePostsByUserId } = require('../models/postModel');
+const { updateCommentsByUserId } = require('../models/commentModel');
 
 // 로그인 응답
 const login = (req, res) => {
@@ -39,7 +43,6 @@ const login = (req, res) => {
             process.env.JWT_SECRET_KEY,
             { expiresIn: '1h' }
         );
-        console.log('JWT 생성 데이터:', { user_id: user.user_id, email: user.email });
 
         // 성공 응답
         res.json({
@@ -99,6 +102,7 @@ const checkEmailExists = (req, res) => {
 // 닉네임 중복 체크
 const checkNicknameExists = (req, res) => {
     const { nickname } = req.query;
+    const { user_id } = req.user
 
     if (!nickname) {
         return res.status(400).json({
@@ -110,7 +114,8 @@ const checkNicknameExists = (req, res) => {
 
     try {
         const user = findUserByNickname(nickname);
-        if (user) {
+        // 닉네임이 존재하지만 본인의 닉네임이 아닌 경우
+        if (user && user.user_id !== user_id) {
             return res.status(409).json({
                 status: 409,
                 message: "already_exist_nickname",
@@ -132,10 +137,10 @@ const checkNicknameExists = (req, res) => {
     }
 };
 
-// 회원가입 응답
+// 회원 가입 응답
 const register = async (req, res) => {
     const { email, password, nickname } = req.body;
-    const profileImagePath = req.file ? `/public/image/profile/${req.file.filename}` : null;
+    const profile_image_path = req.file ? `/public/image/profile/${req.file.filename}` : null;
 
     // 필수 입력값 검증
     if (!email) return res.status(400).json({ status: 400, message: "required_email", data: null });
@@ -151,7 +156,7 @@ const register = async (req, res) => {
             email,
             password: hashedPassword,
             nickname,
-            profileImagePath,
+            profile_image_path,
         });
 
         res.status(201).json({
@@ -164,4 +169,95 @@ const register = async (req, res) => {
     }
 };
 
-module.exports = { login, checkEmailExists, checkNicknameExists, register };
+// 유저 정보 조회
+const getUserById = (req, res) => {
+    const { user_id } = req.params; 
+    const users = getUsers();
+   
+    if (!user_id || isNaN(user_id)) {
+        return res.status(400).json({
+            status: 400,
+            message: "invalid_user_id",
+            data: null,
+        });
+    }
+
+    const user = users.find(user => user.user_id === Number(user_id));
+
+    if (!user) {
+        return res.status(404).json({
+            status: 404,
+            message: "not_found_user",
+            data: null,
+        });
+    }
+
+    return res.status(200).json({
+        status: 200,
+        message: "get_user_success",
+        data: {
+            user_id: user.user_id,
+            email: user.email,
+            nickname: user.nickname,
+            profile_image_path: user.profile_image_path,
+        },
+    });
+};
+
+// 회원 정보 수정
+const updateUser = (req, res) => {
+    const { user_id } = req.params;
+    const { user_id: authenticatedUserId } = req.user;
+    const { nickname } = req.body;
+    const profile_image_path = req.file ? `/public/image/profile/${req.file.filename}` : null;
+
+    if (!user_id) {
+        return res.status(400).json({ status: 400, message: "invalid_user_id", data: null });
+    }
+
+    if (!nickname) {
+        return res.status(400).json({ status: 400, message: "nickname_required", data: null });
+    }
+
+    if (nickname.length > 10) {
+        return res.status(400).json({ status: 400, message: "invalid_nickname_length", data: null });
+    }
+
+    if (Number(user_id) !== authenticatedUserId) {
+        return res.status(403).json({ message: "required_permission" });
+    }
+
+    try {
+        const users = getUsers();
+        const userIndex = users.findIndex(user => user.user_id === Number(user_id));
+
+        if (userIndex === -1) {
+            return res.status(404).json({ status: 404, message: "not_found_user", data: null });
+        }
+
+        // 사용자 정보 업데이트
+        users[userIndex] = {
+            ...users[userIndex],
+            nickname,
+            profile_image_path: profile_image_path || users[userIndex].profile_image_path,
+            updated_at: new Date().toISOString(),
+        };
+
+        saveUsers(users);
+
+        // 게시글과 댓글 데이터 업데이트
+        const updatedData = { nickname, profile_image_path };
+        updatePostsByUserId(Number(user_id), updatedData);
+        updateCommentsByUserId(Number(user_id), updatedData);
+
+        return res.status(200).json({
+            status: 200,
+            message: "update_profile_success",
+            data: { user_id: Number(user_id) },
+        });
+    } catch (error) {
+        return res.status(500).json({ status: 500, message: "internal_server_error", data: null });
+    }
+}
+
+module.exports = { login, checkEmailExists, checkNicknameExists, register, updateUser, getUserById };

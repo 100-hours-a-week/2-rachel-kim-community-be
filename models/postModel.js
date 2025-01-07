@@ -38,4 +38,20 @@ const deletePost = (post_id) => {
     }
 };
 
-module.exports = { getPosts,  getPostById, deletePost};
+// 게시글 업데이트
+const updatePostsByUserId = (user_id, updatedData) => {
+    const posts = JSON.parse(fs.readFileSync(dataPath, 'utf-8'));
+    const updatedPosts = posts.map(post => {
+        if (post.user_id === user_id) {
+            return {
+                ...post,
+                nickname: updatedData.nickname || post.nickname,
+                profile_image_path: updatedData.profile_image_path || post.profile_image_path,
+            };
+        }
+        return post;
+    });
+    fs.writeFileSync(dataPath, JSON.stringify(updatedPosts, null, 2), 'utf-8');
+};
+
+module.exports = { getPosts, getPostById, deletePost, updatePostsByUserId };

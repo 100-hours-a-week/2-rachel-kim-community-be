@@ -92,4 +92,21 @@ const deleteComment = (post_id, comment_id, user_id) => {
     fs.writeFileSync(dataPath, JSON.stringify(comments, null, 2), 'utf-8'); // 파일 저장
 };
 
-module.exports = { getCommentsByPostId, addComment, updateComment, deleteComment };
+// 댓글 업데이트
+const updateCommentsByUserId = (user_id, updatedData) => {
+    const comments = JSON.parse(fs.readFileSync(dataPath, 'utf-8'));
+    const updatedComments = comments.map(comment => {
+        if (comment.user_id === user_id) {
+            return {
+                ...comment,
+                nickname: updatedData.nickname || comment.nickname,
+                profile_image_path: updatedData.profile_image_path || comment.profile_image_path,
+            };
+        }
+        return comment;
+    });
+    fs.writeFileSync(dataPath, JSON.stringify(updatedComments, null, 2), 'utf-8');
+};
+
+module.exports = { getCommentsByPostId, addComment, updateComment, deleteComment, updateCommentsByUserId };
+
