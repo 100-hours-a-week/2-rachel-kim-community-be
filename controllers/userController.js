@@ -39,7 +39,7 @@ const login = (req, res) => {
                 profile_image_path: user.profile_image_path, 
             },
             process.env.JWT_SECRET_KEY,
-            { expiresIn: '1h' }
+            { expiresIn: '30d' }
         );
 
         // 성공 응답
