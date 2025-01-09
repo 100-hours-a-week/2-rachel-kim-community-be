@@ -23,9 +23,11 @@
 ├─ public
 │  └─ image
 │     ├─ posts
+│     │  ├─ 1736141259076-548136637-IMG_1984.jpeg
+│     │  ├─ 1736142810937-952782317-IMG_0418.jpeg
 │     │  └─ post.jpeg
 │     └─ profile
-│        ├─ 1734337690478-303553625-IMG_8073.jpeg
+│        ├─ 1736232024240-647705081-IMG_8137.jpeg
 │        └─ default-profile.jpeg
 ├─ routes
 │  ├─ commentRoutes.js

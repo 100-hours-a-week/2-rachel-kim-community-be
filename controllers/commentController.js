@@ -32,6 +32,12 @@ const createComment = (req, res) => {
     }
 
     try {
+        // 게시글 존재 여부 확인
+        const post = getPostById(post_id); // 게시글을 찾는 함수 (예: DB에서 검색)
+        if (!post) {
+            return res.status(404).json({ status: 404, message: "not_a_single_post", data: null });
+        }
+        
         const newComment = addComment(post_id, commentContent, user_id, nickname, profile_image_path);
         return res.status(201).json({ status: 201, message: "write_comment_success", data: newComment });
     } catch (error) {

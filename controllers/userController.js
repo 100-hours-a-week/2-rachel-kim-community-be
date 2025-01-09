@@ -61,6 +61,31 @@ const login = (req, res) => {
     }
 };
 
+// 로그인 상태 확인
+const checkAuthStatus = (req, res) => {
+    try {
+        res.status(200).json({
+            status: 200,
+            message: null,
+            data: {
+                user_id: req.user.user_id,
+                email: req.user.email,
+                nickname: req.user.nickname,
+                profile_image_path: req.user.profile_image_path,
+                auth_token: req.headers['authorization']?.split(' ')[1],
+                auth_status: true,
+            },
+        });
+    } catch (error) {
+        console.error('로그인 상태 확인 실패:', error.message);
+        res.status(500).json({
+            status: 500,
+            message: "internal_server_error",
+            data: null,
+        });
+    }
+};
+
 // 이메일 중복 체크
 const checkEmailExists = (req, res) => {
     const { email } = req.query;
@@ -229,10 +254,6 @@ const updateUser = (req, res) => {
         const users = getUsers();
         const userIndex = users.findIndex(user => user.user_id === Number(user_id));
 
-        if (userIndex === -1) {
-            return res.status(404).json({ status: 404, message: "not_found_user", data: null });
-        }
-
         // 사용자 정보 업데이트
         users[userIndex] = {
             ...users[userIndex],
@@ -318,10 +339,6 @@ const changePassword = (req, res) => {
     const users = getUsers();
     const userIndex = users.findIndex(user => user.user_id === Number(user_id));
 
-    if (userIndex === -1) {
-        return res.status(404).json({ status: 404, message: "not_found_user", data: null });
-    }
-
     // 비밀번호 해시화
     bcrypt.hash(password, 10)
         .then(hashedPassword => {
@@ -337,4 +354,4 @@ const changePassword = (req, res) => {
         });
 };
 
-module.exports = { login, checkEmailExists, checkNicknameExists, register, updateUser, getUserById, deleteUser, changePassword };
+module.exports = { login, checkAuthStatus, checkEmailExists, checkNicknameExists, register, updateUser, getUserById, deleteUser, changePassword };

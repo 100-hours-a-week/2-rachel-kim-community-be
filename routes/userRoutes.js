@@ -1,12 +1,14 @@
 /* userRoutes */
 const express = require('express');
-const { login, checkEmailExists, checkNicknameExists, register, getUserById, updateUser, deleteUser, changePassword } = require('../controllers/userController');
+const { login, checkAuthStatus, checkEmailExists, checkNicknameExists, register, getUserById, updateUser, deleteUser, changePassword } = require('../controllers/userController');
 const upload = require('../middlewares/upload');
 const { authenticateToken } = require('../middlewares/authMiddleware');
 const router = express.Router();
 
 // 로그인 
 router.post('/login', login);
+// 로그인 상태 확인
+router.get('/auth/check', authenticateToken, checkAuthStatus);
 // 이메일 중복 체크
 router.get('/email/check', checkEmailExists);
 // 닉네임 중복 체크

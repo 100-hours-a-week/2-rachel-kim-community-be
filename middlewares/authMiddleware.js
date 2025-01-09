@@ -17,7 +17,7 @@ const authenticateToken = (req, res, next) => {
         const user = users.find(user => user.user_id === decoded.user_id);
         if (!user) {
             console.error('토큰의 user_id와 일치하는 사용자를 찾을 수 없습니다.');
-            return res.status(401).json({ message: 'User not found' });
+            return res.status(401).json({ message: 'user_not_found' });
         }
 
         // 사용자 정보를 req.user에 추가

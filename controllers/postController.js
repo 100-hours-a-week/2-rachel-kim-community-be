@@ -112,14 +112,6 @@ const createPost = (req, res) => {
     if (postTitle.length > 26) {
         return res.status(400).json({ status: 400, message: "invalid_post_title_length", data: null });
     }
-    if (!user_id) {
-        return res.status(401).json({ status: 401, message: "required_authorization", data: null });
-    }
-    // 사용자 정보 매핑
-    const user = users.find(u => u.user_id === user_id);
-    if (!user) {
-        return res.status(404).json({ status: 404, message: "user_not_found", data: null });
-    }
 
     const newPost = {
         post_id: posts.length ? posts[posts.length - 1].post_id + 1 : 1,
@@ -147,7 +139,7 @@ const createPost = (req, res) => {
             data: { post_id: newPost.post_id }
         });
     } catch (error) {
-        return res.status(500).json({ status: 500, message: "failed_to_write_post", data: null });
+        return res.status(500).json({ status: 500, message: "internal_server_error", data: null });
     }
 };
 
