@@ -27,6 +27,11 @@ const createComment = (req, res) => {
     const { commentContent } = req.body;  
     const { user_id, nickname, profile_image_path } = req.user;
 
+    if (!req.user) {
+        console.error('로그인된 사용자 정보가 없습니다.');
+        return res.status(401).json({ status: 401, message: 'user_not_authenticated' });
+    }
+
     if (!post_id || !commentContent) {
         return res.status(400).json({ status: 400, message: "missing_required_fields", data: null });
     }

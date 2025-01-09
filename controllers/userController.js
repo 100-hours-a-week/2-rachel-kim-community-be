@@ -63,27 +63,21 @@ const login = (req, res) => {
 
 // 로그인 상태 확인
 const checkAuthStatus = (req, res) => {
-    try {
-        res.status(200).json({
-            status: 200,
-            message: null,
-            data: {
-                user_id: req.user.user_id,
-                email: req.user.email,
-                nickname: req.user.nickname,
-                profile_image_path: req.user.profile_image_path,
-                auth_token: req.headers['authorization']?.split(' ')[1],
-                auth_status: true,
-            },
-        });
-    } catch (error) {
-        console.error('로그인 상태 확인 실패:', error.message);
-        res.status(500).json({
-            status: 500,
-            message: "internal_server_error",
-            data: null,
-        });
+    // req.user가 없으면 인증 실패 처리
+    if (!req.user) {
+        return res.status(401).json({ status: 401, message: "user_not_authenticated" });
     }
+
+    // 인증 성공 시 사용자 정보 반환
+    res.status(200).json({
+        status: 200,
+        message: null,
+        data: {
+            user_id: req.user.user_id,
+            email: req.user.email,
+            nickname: req.user.nickname,
+        },
+    });
 };
 
 // 이메일 중복 체크
