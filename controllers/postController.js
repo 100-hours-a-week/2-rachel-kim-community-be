@@ -104,7 +104,7 @@ const removePost = (req, res) => {
 const createPost = (req, res) => {
     const { postTitle, postContent } = req.body;
     const { file } = req;
-    const { user_id } = req.user;
+    const { user_id, nickname, profile_image_path } = req.user;
 
     if (!postTitle || !postContent) {
         return res.status(400).json({ status: 400, message: "invalid_request", data: null});
@@ -119,8 +119,8 @@ const createPost = (req, res) => {
         post_title: postTitle,
         post_content: postContent,
         post_image_path: file ? `/public/image/posts/${file.filename}` : null,
-        nickname: user.nickname,
-        profile_image_path: user.profile_image_path,
+        nickname: nickname,
+        profile_image_path: profile_image_path,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
         likes: 0, // 기본값

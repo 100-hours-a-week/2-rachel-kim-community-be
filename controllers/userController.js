@@ -76,6 +76,7 @@ const checkAuthStatus = (req, res) => {
             user_id: req.user.user_id,
             email: req.user.email,
             nickname: req.user.nickname,
+            profile_image_path: req.user.profile_image_path,
         },
     });
 };

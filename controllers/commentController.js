@@ -1,5 +1,6 @@
 /* commentController.js */
 const { getCommentsByPostId, addComment, updateComment, deleteComment } = require('../models/commentModel');
+const { getPostById } = require('../models/postModel'); 
 
 // 댓글 목록 조회
 const getPostComments = (req, res) => {
@@ -27,12 +28,17 @@ const createComment = (req, res) => {
     const { commentContent } = req.body;  
     const { user_id, nickname, profile_image_path } = req.user;
 
+    // 디버깅
+    console.log('받은 댓글 데이터:', req.body);
+    console.log('로그인된 사용자:', req.user);
+
     if (!req.user) {
         console.error('로그인된 사용자 정보가 없습니다.');
         return res.status(401).json({ status: 401, message: 'user_not_authenticated' });
     }
 
     if (!post_id || !commentContent) {
+        console.error('필수 데이터 누락:', { post_id, commentContent });
         return res.status(400).json({ status: 400, message: "missing_required_fields", data: null });
     }
 
@@ -40,12 +46,18 @@ const createComment = (req, res) => {
         // 게시글 존재 여부 확인
         const post = getPostById(post_id); // 게시글을 찾는 함수 (예: DB에서 검색)
         if (!post) {
+            console.error('게시글을 찾을 수 없습니다:', post_id);
             return res.status(404).json({ status: 404, message: "not_a_single_post", data: null });
         }
         
         const newComment = addComment(post_id, commentContent, user_id, nickname, profile_image_path);
+        // 디버깅
+        console.log('새로운 댓글:', newComment);
+        console.log('addComment 호출:', { post_id, commentContent, user_id, nickname, profile_image_path });
+
         return res.status(201).json({ status: 201, message: "write_comment_success", data: newComment });
     } catch (error) {
+        console.error('addComment 함수 에러:', error.message);
         return res.status(500).json({ status: 500, message: "internal_server_error", data: null });
     }
 };
