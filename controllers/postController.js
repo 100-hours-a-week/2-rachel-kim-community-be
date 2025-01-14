@@ -1,5 +1,8 @@
 /* postController.js */
-const { getPosts, getPostById, deletePost, savePost } = require('../models/postModel');
+const { getPosts, 
+        getPostById, 
+        deletePost, 
+        savePost } = require('../models/postModel');
 const fs = require('fs');
 const path = require('path');
 const posts = require('../data/posts.json');
@@ -109,6 +112,7 @@ const createPost = (req, res) => {
         likes: 0, // 기본값
         likedUsers: [],
         views: 0, // 기본값
+        viewedUsers: [],
         comment_count: 0 // 기본값
     };
 
@@ -211,4 +215,35 @@ const toggleLike = (req, res) => {
     res.send({ likes: post.likes });
 };
 
-module.exports = { getPostsList, getPostDetail, removePost, createPost, updatePost, checkLikeStatus, toggleLike };
+const updatePostView = (req, res) => {
+    const { post_id } = req.params;
+    const { user_id } = req.user;
+
+    try {
+        const post = getPostById(post_id);
+        if (!post) {
+            return res.status(404).json({ status: 404, message: "post_not_found", data: null });
+        }
+
+        // 조회수 중복 체크: user_id가 포함되지 않은 경우에만 증가
+        if (!post.viewedUsers.includes(user_id)) {
+            post.views += 1;
+            post.viewedUsers.push(user_id); // 조회한 사용자 추가
+            savePost(post);
+        }
+        
+        return res.status(200).json({ status: 200, message: "view_count_updated", data: null });
+    } catch (error) {
+        return res.status(500).json({ status: 500, message: "internal_server_error", data: null });
+    }
+};
+
+module.exports = { 
+    getPostsList, 
+    getPostDetail, 
+    removePost, 
+    createPost, 
+    updatePost, 
+    checkLikeStatus, 
+    toggleLike, 
+    updatePostView };

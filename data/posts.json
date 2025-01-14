@@ -15,23 +15,33 @@
       1,
       2
     ],
-    "views": 0,
+    "views": 2,
+    "viewedUsers": [
+      2,
+      1
+    ],
     "comment_count": 0
   },
   {
     "post_id": 2,
     "user_id": 2,
     "post_title": "나는 첼첼이",
-    "post_content": "헬로입니다",
-    "post_image_path": null,
+    "post_content": "키티가 좋아",
+    "post_image_path": "/public/image/posts/1736829048654-39602938-IMG_1984.jpeg",
     "nickname": "레이첼첼이",
-    "created_at": "2025-01-13T13:08:49.332Z",
-    "updated_at": "2025-01-13T13:08:49.332Z",
-    "likes": 1,
+    "profile_image_path": "/public/image/profile/1736773712609-55047345-IMG_8138.jpeg",
+    "created_at": "2025-01-14T01:49:21.344Z",
+    "updated_at": "2025-01-14T04:30:48.658Z",
+    "likes": 2,
     "likedUsers": [
-      2
+      2,
+      1
     ],
-    "views": 0,
+    "views": 2,
+    "viewedUsers": [
+      2,
+      1
+    ],
     "comment_count": 0
   }
 ]
