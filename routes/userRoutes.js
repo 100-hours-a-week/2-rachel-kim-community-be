@@ -1,6 +1,6 @@
 /* userRoutes */
 const express = require('express');
-const { login, checkAuthStatus, checkEmailExists, checkNicknameExists, register, getUserById, updateUser, deleteUser, changePassword } = require('../controllers/userController');
+const { login, checkAuthStatus, checkEmailExists, checkNicknameForSignup, checkNicknameForUpdate, register, getUserById, updateUser, deleteUser, changePassword } = require('../controllers/userController');
 const upload = require('../middlewares/upload');
 const { authenticateToken } = require('../middlewares/authMiddleware');
 const router = express.Router();
@@ -11,8 +11,10 @@ router.post('/login', login);
 router.get('/auth/check', authenticateToken, checkAuthStatus);
 // 이메일 중복 체크
 router.get('/email/check', checkEmailExists);
-// 닉네임 중복 체크
-router.get('/nickname/check', authenticateToken, checkNicknameExists);
+// 닉네임 중복 체크 (회원가입)
+router.get('/nickname/check/signup', checkNicknameForSignup);
+// 닉네임 중복 체크 (회원정보 수정)
+router.get('/nickname/check/update', authenticateToken, checkNicknameForUpdate);
 // 회원 가입 
 router.post('/signup', upload.single('profilePhoto'), register);
 // 유저 정보 조회

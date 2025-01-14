@@ -117,10 +117,9 @@ const checkEmailExists = (req, res) => {
     }
 };
 
-// 닉네임 중복 체크
-const checkNicknameExists = (req, res) => {
+// 닉네임 중복 체크 (회원가입)
+const checkNicknameForSignup = (req, res) => {
     const { nickname } = req.query;
-    const { user_id } = req.user
 
     if (!nickname) {
         return res.status(400).json({
@@ -132,7 +131,45 @@ const checkNicknameExists = (req, res) => {
 
     try {
         const user = findUserByNickname(nickname);
-        // 닉네임이 존재하지만 본인의 닉네임이 아닌 경우
+        if (user) {
+            return res.status(409).json({
+                status: 409,
+                message: "already_exist_nickname",
+                data: null,
+            });
+        }
+
+        return res.status(200).json({
+            status: 200,
+            message: "available_nickname",
+            data: null,
+        });
+    } catch (error) {
+        console.error("닉네임 중복 체크 오류:", error);
+        return res.status(500).json({
+            status: 500,
+            message: "internal_server_error",
+            data: null,
+        });
+    }
+};
+
+// 닉네임 중복 체크 (회원정보 수정)
+const checkNicknameForUpdate = (req, res) => {
+    const { nickname } = req.query;
+    const user_id = req.user ? req.user.user_id : null;
+
+    if (!nickname) {
+        return res.status(400).json({
+            status: 400,
+            message: "required_nickname",
+            data: null,
+        });
+    }
+
+    try {
+        const user = findUserByNickname(nickname);
+        // 닉네임이 존재하고, 본인의 닉네임이 아닌 경우
         if (user && user.user_id !== user_id) {
             return res.status(409).json({
                 status: 409,
@@ -147,6 +184,7 @@ const checkNicknameExists = (req, res) => {
             data: null,
         });
     } catch (error) {
+        console.error("닉네임 중복 체크 오류:", error);
         return res.status(500).json({
             status: 500,
             message: "internal_server_error",
@@ -349,4 +387,4 @@ const changePassword = (req, res) => {
         });
 };
 
-module.exports = { login, checkAuthStatus, checkEmailExists, checkNicknameExists, register, updateUser, getUserById, deleteUser, changePassword };
+module.exports = { login, checkAuthStatus, checkEmailExists, checkNicknameForSignup, checkNicknameForUpdate, register, updateUser, getUserById, deleteUser, changePassword };

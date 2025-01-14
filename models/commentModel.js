@@ -7,15 +7,20 @@ const dataPath = path.join(__dirname, '../data/comments.json');
 const getCommentsByPostId = (post_id) => {
     const comments = JSON.parse(fs.readFileSync(dataPath, 'utf-8')); // 댓글 데이터 읽기
     const filteredComments = comments.filter(comment => comment.post_id === Number(post_id));
+    const users = JSON.parse(fs.readFileSync(path.join(__dirname, '../data/users.json'), 'utf-8')); // 사용자 데이터 읽기
 
     if (filteredComments.length === 0) {
         throw new Error("댓글이 없습니다."); // 404 에러
     }
 
-    return filteredComments.map(comment => ({
-        ...comment,
-        profile_image_path: comment.profile_image_path || "/public/image/profile/default-profile.jpeg",
-    }));
+    return filteredComments.map(comment => {
+        const user = users.find(user => user.user_id === comment.user_id);
+        return {
+            ...comment,
+            nickname: user ? user.nickname : comment.nickname,
+            profile_image_path: user ? user.profile_image_path : "/public/image/profile/default-profile.jpeg",
+        };
+    });
 };
 
 // 댓글 등록

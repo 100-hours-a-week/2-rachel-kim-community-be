@@ -20,14 +20,8 @@ const authenticateToken = (req, res, next) => {
             return res.status(401).json({ message: 'user_not_found' });
         }
 
-        // 디버깅
-        console.log('인증된 사용자:', user);
-
         // 인증된 사용자 정보 추가
         req.user = user;
-        
-        // 디버깅
-        console.log('req.user:', req.user); 
         next();
     } catch (error) {
         if (error.name === 'TokenExpiredError') {

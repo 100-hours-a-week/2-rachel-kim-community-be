@@ -1,5 +1,5 @@
 /* postController.js */
-const { getPosts, getPostById, deletePost } = require('../models/postModel');
+const { getPosts, getPostById, deletePost, savePost } = require('../models/postModel');
 const fs = require('fs');
 const path = require('path');
 const posts = require('../data/posts.json');
@@ -11,7 +11,6 @@ const getPostsList = (req, res) => {
     try {
         // 데이터 가져오기
         const posts = getPosts();
-
         // 게시글 데이터가 없는 경우
         if (!posts || posts.length === 0) {
             return res.status(404).json({
@@ -22,28 +21,11 @@ const getPostsList = (req, res) => {
         }
 
         // 성공 응답
-        const response = {
+        res.status(200).json({
             status: 200,
             message: "get_posts_success",
-            data: posts.map(post => ({
-                post_id: post.post_id,
-                post_title: post.post_title,
-                post_content: post.post_content,
-                post_image_path: post.post_image_path, // api 확인
-                file_id: post.file_id,
-                user_id: post.user_id,   
-                nickname: post.nickname,
-                created_at: post.created_at,
-                updated_at: post.updated_at,
-                deleted_at: post.deleted_at,
-                likes: post.likes,
-                comment_count: post.comment_count,
-                views: post.views,
-                profile_image_path: post.profile_image_path
-            }))
-        };
-
-        res.status(200).json(response);
+            data: posts,
+        });
     } catch (error) {
         console.error("게시글 목록 조회 오류:", error);
         res.status(500).json({
@@ -104,7 +86,8 @@ const removePost = (req, res) => {
 const createPost = (req, res) => {
     const { postTitle, postContent } = req.body;
     const { file } = req;
-    const { user_id, nickname, profile_image_path } = req.user;
+    const { user_id } = req.user;
+    const user = users.find(user => user.user_id === req.user.user_id);
 
     if (!postTitle || !postContent) {
         return res.status(400).json({ status: 400, message: "invalid_request", data: null});
@@ -119,11 +102,12 @@ const createPost = (req, res) => {
         post_title: postTitle,
         post_content: postContent,
         post_image_path: file ? `/public/image/posts/${file.filename}` : null,
-        nickname: nickname,
-        profile_image_path: profile_image_path,
+        nickname: user ? user.nickname : null,
+        profile_image_path: user ? user.profile_image_path : null,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
         likes: 0, // 기본값
+        likedUsers: [],
         views: 0, // 기본값
         comment_count: 0 // 기본값
     };
@@ -194,4 +178,37 @@ const updatePost = (req, res) => {
     }
 };
 
-module.exports = { getPostsList, getPostDetail, removePost, createPost, updatePost };
+// 좋아요 상태 조회
+const checkLikeStatus = (req, res) => {
+    const { post_id } = req.params;
+    const { user_id } = req.user;
+
+    const post = getPostById(post_id);
+    if (!post) return res.status(404).send({ message: "Post not found" });
+
+    const liked = post.likedUsers.includes(user_id);
+    res.send({ liked, likeCount: post.likes });
+};
+
+// 좋아요 토글
+const toggleLike = (req, res) => {
+    const { post_id } = req.params;
+    const { user_id } = req.user;
+
+    const post = getPostById(post_id);
+    if (!post) return res.status(404).send({ message: "Post not found" });
+
+    const alreadyLiked = post.likedUsers.includes(user_id);
+    if (alreadyLiked) {
+        post.likes -= 1;
+        post.likedUsers = post.likedUsers.filter(id => id !== user_id);
+    } else {
+        post.likes += 1;
+        post.likedUsers.push(user_id);
+    }
+
+    savePost(post);
+    res.send({ likes: post.likes });
+};
+
+module.exports = { getPostsList, getPostDetail, removePost, createPost, updatePost, checkLikeStatus, toggleLike };

@@ -1,24 +1,6 @@
 [
   {
     "user_id": 1,
-    "email": "test@example.com",
-    "password": "$2b$10$tyYO23MfRa0e50eUk3VeJeClr58ZU70B6TwQTTj7yiMl6R0KWju9K",
-    "nickname": "user1",
-    "created_at": "2024-12-13T00:00:00Z",
-    "updated_at": "2024-12-13T00:00:00Z",
-    "deleted_at": null
-  },
-  {
-    "user_id": 2,
-    "email": "user2@example.com",
-    "password": "$2b$10$WBq2HJ5k6.XcLxdMWGGAD.6Mkqwe1lSxcvIOOvWkYesof9EvXuCLi",
-    "nickname": "user2",
-    "created_at": "2024-12-13T00:00:00Z",
-    "updated_at": "2024-12-13T00:00:00Z",
-    "deleted_at": null
-  },
-  {
-    "user_id": 3,
     "email": "tomy0910@naver.com",
     "password": "$2b$10$tGgxvKxDtofUnayyR5riuOZOcGLoeJlXeaMvczpsKLiJcO8b/5Q/m",
     "nickname": "레이체리",
@@ -26,5 +8,15 @@
     "updated_at": "2025-01-10T15:57:39.440Z",
     "deleted_at": null,
     "profile_image_path": "/public/image/profile/1736232024240-647705081-IMG_8137.jpeg"
+  },
+  {
+    "user_id": 2,
+    "email": "tomy9909@naver.com",
+    "password": "$2b$10$7cvDgvq0h6hPTHGxfSjhEeGclyx4KaimVDTGq3XYYshOIwJcGv/iu",
+    "nickname": "레이첼첼이",
+    "created_at": "2025-01-13T08:26:22.102Z",
+    "updated_at": "2025-01-13T14:07:06.133Z",
+    "deleted_at": null,
+    "profile_image_path": "/public/image/profile/1736773712609-55047345-IMG_8138.jpeg"
   }
 ]

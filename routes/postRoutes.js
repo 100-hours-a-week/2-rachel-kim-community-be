@@ -1,7 +1,7 @@
 /* postRoutes.js */
 const express = require('express');
 const { authenticateToken } = require('../middlewares/authMiddleware');
-const { getPostsList, getPostDetail, removePost, createPost, updatePost } = require('../controllers/postController');
+const { getPostsList, getPostDetail, removePost, createPost, updatePost, checkLikeStatus, toggleLike } = require('../controllers/postController');
 const router = express.Router();
 const upload = require('../middlewares/upload');
 
@@ -15,5 +15,10 @@ router.delete('/:post_id', authenticateToken, removePost);
 router.post('/new', authenticateToken, upload.single('attachFilePath'), createPost);
 // 게시글 수정
 router.patch('/:post_id', authenticateToken, upload.single('attachFilePath'), updatePost);
+// 좋아요 상태 확인
+router.get('/:post_id/like-status', authenticateToken, checkLikeStatus);
+// 좋아요 토글
+router.post('/:post_id/like', authenticateToken, toggleLike);
+router.delete('/:post_id/like', authenticateToken, toggleLike);
 
 module.exports = router;

@@ -6,21 +6,30 @@ const posts = require('../data/posts.json');
 
 // 게시글 목록 조회
 const getPosts = () => {
-    const data = fs.readFileSync(dataPath, 'utf-8');
-    return JSON.parse(data).map(post => ({
-        ...post,
-        profile_image_path: post.profile_image_path || "/public/image/profile/default-profile.jpeg", // 기본 프로필 이미지
-    }));
+    const posts = JSON.parse(fs.readFileSync(dataPath, 'utf-8')); // 게시글 데이터 읽기
+    const users = JSON.parse(fs.readFileSync(path.join(__dirname, '../data/users.json'), 'utf-8')); // 사용자 데이터 읽기
+
+    return posts.map(post => {
+        const user = users.find(user => user.user_id === post.user_id);
+        return {
+            ...post,
+            nickname: user ? user.nickname : post.nickname,
+            profile_image_path: user ? user.profile_image_path : "/public/image/profile/default-profile.jpeg",
+        };
+    });
 };
 
 // 게시글 상세 조회
 const getPostById = (post_id) => {
     const posts = JSON.parse(fs.readFileSync(dataPath, 'utf-8'));
+    const users = JSON.parse(fs.readFileSync(path.join(__dirname, '../data/users.json'), 'utf-8')); // 사용자 데이터 읽기
     const post = posts.find(post => post.post_id === Number(post_id));
     if (post) {
+        const user = users.find(user => user.user_id === post.user_id);
         return {
             ...post,
-            profile_image_path: post.profile_image_path || "/public/image/profile/default-profile.jpeg",
+            nickname: user ? user.nickname : post.nickname,
+            profile_image_path: user ? user.profile_image_path : "/public/image/profile/default-profile.jpeg",
         };
     }
     return null;
@@ -54,4 +63,14 @@ const updatePostsByUserId = (user_id, updatedData) => {
     fs.writeFileSync(dataPath, JSON.stringify(updatedPosts, null, 2), 'utf-8');
 };
 
-module.exports = { getPosts, getPostById, deletePost, updatePostsByUserId };
+// 게시글 저장
+const savePost = (updatedPost) => {
+    const posts = JSON.parse(fs.readFileSync(dataPath, 'utf-8'));
+    const postIndex = posts.findIndex(post => post.post_id === updatedPost.post_id);
+    if (postIndex !== -1) {
+        posts[postIndex] = updatedPost;
+        fs.writeFileSync(dataPath, JSON.stringify(posts, null, 2), 'utf-8');
+    }
+};
+
+module.exports = { getPosts, getPostById, deletePost, updatePostsByUserId, savePost };

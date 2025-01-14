@@ -1,29 +1,29 @@
 [
   {
-    "post_id": 1,
     "comment_id": 1,
-    "comment_content": "댓글 내용입니다.",
+    "post_id": 1,
+    "comment_content": "ㅎㅎ",
     "user_id": 1,
-    "nickname": "댓글 작성자1",
-    "author_photo": "/public/image/profile/default-profile.jpeg",
-    "created_at": "2024-06-02T10:00:00.000Z"
+    "nickname": "레이체리",
+    "created_at": "2025-01-13T07:36:53.434Z",
+    "profile_image_path": "/public/image/profile/1736232024240-647705081-IMG_8137.jpeg"
   },
   {
     "comment_id": 2,
     "post_id": 2,
-    "comment_content": "반가워용",
-    "user_id": 3,
-    "nickname": "레이체리",
-    "created_at": "2025-01-02T16:10:19.276Z",
-    "profile_image_path": "/public/image/profile/1736232024240-647705081-IMG_8137.jpeg"
+    "comment_content": "꺄르륵",
+    "user_id": 2,
+    "nickname": "레이첼첼이",
+    "created_at": "2025-01-13T13:10:49.707Z",
+    "profile_image_path": "/public/image/profile/default-profile.jpeg"
   },
   {
     "comment_id": 3,
-    "post_id": 4,
-    "comment_content": "히히",
-    "user_id": 3,
-    "nickname": "레이체리",
-    "created_at": "2025-01-09T13:51:30.176Z",
-    "profile_image_path": "/public/image/profile/1736232024240-647705081-IMG_8137.jpeg"
+    "post_id": 1,
+    "comment_content": "헤헤",
+    "user_id": 2,
+    "nickname": "레이첼첼이",
+    "created_at": "2025-01-13T14:04:27.761Z",
+    "profile_image_path": "/public/image/profile/1736773712609-55047345-IMG_8138.jpeg"
   }
 ]

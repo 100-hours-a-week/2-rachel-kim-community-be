@@ -28,10 +28,6 @@ const createComment = (req, res) => {
     const { commentContent } = req.body;  
     const { user_id, nickname, profile_image_path } = req.user;
 
-    // 디버깅
-    console.log('받은 댓글 데이터:', req.body);
-    console.log('로그인된 사용자:', req.user);
-
     if (!req.user) {
         console.error('로그인된 사용자 정보가 없습니다.');
         return res.status(401).json({ status: 401, message: 'user_not_authenticated' });
@@ -51,10 +47,6 @@ const createComment = (req, res) => {
         }
         
         const newComment = addComment(post_id, commentContent, user_id, nickname, profile_image_path);
-        // 디버깅
-        console.log('새로운 댓글:', newComment);
-        console.log('addComment 호출:', { post_id, commentContent, user_id, nickname, profile_image_path });
-
         return res.status(201).json({ status: 201, message: "write_comment_success", data: newComment });
     } catch (error) {
         console.error('addComment 함수 에러:', error.message);

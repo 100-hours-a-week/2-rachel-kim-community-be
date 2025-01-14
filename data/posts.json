@@ -1,47 +1,36 @@
 [
   {
     "post_id": 1,
-    "post_title": "게시글 제목 1",
-    "post_content": "게시글 내용 1",
-    "post_image_path": "/public/image/posts/post.jpeg",
-    "file_id": 1,
     "user_id": 1,
-    "nickname": "사용자1",
-    "created_at": "2024-12-01T10:00:00.000Z",
-    "updated_at": "2024-12-01T10:00:00.000Z",
-    "deleted_at": null,
-    "likes": 12000,
-    "comment_count": 300000,
-    "views": 12000,
-    "profile_image_path": "/public/image/profile/default-profile.jpeg"
+    "post_title": "히히 테스트해",
+    "post_content": "쫗아요",
+    "post_image_path": "/public/image/posts/1736750206830-97190401-IMG_0418.jpeg",
+    "nickname": "레이체리",
+    "profile_image_path": "/public/image/profile/1736232024240-647705081-IMG_8137.jpeg",
+    "created_at": "2025-01-13T06:36:46.835Z",
+    "updated_at": "2025-01-13T06:36:46.835Z",
+    "likes": 2,
+    "likedUsers": [
+      3,
+      1,
+      2
+    ],
+    "views": 0,
+    "comment_count": 0
   },
   {
     "post_id": 2,
-    "post_title": "게시글 제목 2",
-    "post_content": "게시글 내용 2",
-    "post_image_path": "/public/image/posts/post.jpeg",
-    "file_id": 2,
     "user_id": 2,
-    "nickname": "사용자2",
-    "created_at": "2024-12-02T11:00:00.000Z",
-    "updated_at": "2024-12-02T11:00:00.000Z",
-    "deleted_at": null,
-    "likes": 20,
-    "comment_count": 5,
-    "views": 200,
-    "profile_image_path": "/public/image/profile/default-profile.jpeg"
-  },
-  {
-    "post_id": 3,
-    "user_id": 3,
-    "post_title": "게시글 수정 테스트 (이미지 포함)",
-    "post_content": "귀여운 헬로키티 귀엽쬬?",
-    "post_image_path": "/public/image/posts/1736142810937-952782317-IMG_0418.jpeg",
-    "nickname": "레이체리",
-    "profile_image_path": "/public/image/profile/1736232024240-647705081-IMG_8137.jpeg",
-    "created_at": "2025-01-03T06:06:58.868Z",
-    "updated_at": "2025-01-09T07:20:22.045Z",
-    "likes": 0,
+    "post_title": "나는 첼첼이",
+    "post_content": "헬로입니다",
+    "post_image_path": null,
+    "nickname": "레이첼첼이",
+    "created_at": "2025-01-13T13:08:49.332Z",
+    "updated_at": "2025-01-13T13:08:49.332Z",
+    "likes": 1,
+    "likedUsers": [
+      2
+    ],
     "views": 0,
     "comment_count": 0
   }
