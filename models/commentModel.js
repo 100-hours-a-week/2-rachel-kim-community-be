@@ -2,6 +2,8 @@
 const fs = require('fs');
 const path = require('path');
 const dataPath = path.join(__dirname, '../data/comments.json');
+const postsPath = path.join(__dirname, '../data/posts.json');
+const posts = JSON.parse(fs.readFileSync(postsPath, 'utf-8'));
 
 // 댓글 목록 조회
 const getCommentsByPostId = (post_id) => {
@@ -26,7 +28,6 @@ const getCommentsByPostId = (post_id) => {
 // 댓글 등록
 const addComment = (postId, content, userId, userNickname, userProfileImage) => {    
     const comments = JSON.parse(fs.readFileSync(dataPath, 'utf-8')); // 파일에서 댓글 데이터 읽기
-
     const newComment = {
         comment_id: comments.length + 1,
         post_id: Number(postId),
@@ -39,6 +40,13 @@ const addComment = (postId, content, userId, userNickname, userProfileImage) => 
 
     comments.push(newComment); // 댓글 추가
     fs.writeFileSync(dataPath, JSON.stringify(comments, null, 2), 'utf-8'); // 파일 저장
+
+    // 댓글 수 증가
+    const postIndex = posts.findIndex(post => post.post_id === Number(postId));
+    if (postIndex !== -1) {
+        posts[postIndex].comment_count += 1;
+        fs.writeFileSync(postsPath, JSON.stringify(posts, null, 2), 'utf-8');
+    }
 
     return newComment;
 };
@@ -74,7 +82,6 @@ const updateComment = (post_id, comment_id, content, user_id) => {
 // 댓글 삭제
 const deleteComment = (post_id, comment_id, user_id) => {
     const comments = JSON.parse(fs.readFileSync(dataPath, 'utf-8')); // 최신 데이터 읽기
-
     // 댓글 인덱스 찾기
     const commentIndex = comments.findIndex(comment => 
         comment.post_id === Number(post_id) &&
@@ -92,9 +99,15 @@ const deleteComment = (post_id, comment_id, user_id) => {
 
     // 댓글 삭제
     comments.splice(commentIndex, 1);
-
     // 변경된 데이터를 파일에 저장
     fs.writeFileSync(dataPath, JSON.stringify(comments, null, 2), 'utf-8'); // 파일 저장
+
+    // 댓글 수 감소
+    const postIndex = posts.findIndex(post => post.post_id === Number(post_id));
+    if (postIndex !== -1) {
+        posts[postIndex].comment_count = Math.max(0, posts[postIndex].comment_count - 1);
+        fs.writeFileSync(postsPath, JSON.stringify(posts, null, 2), 'utf-8');
+    }
 };
 
 // 댓글 업데이트
