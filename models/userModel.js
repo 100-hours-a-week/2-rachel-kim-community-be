@@ -1,35 +1,42 @@
 /* userModel.js */
-const fs = require('fs');
-const path = require('path');
-const bcrypt = require('bcrypt');
+import fs from 'fs';
+import path from 'path';
+import bcrypt from 'bcrypt';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename)
 
 const dataPath = path.join(__dirname, '../data/users.json');
 
-const getUsers = () => {
+// 사용자 목록 조회
+export const getUsers = () => {
     const data = fs.readFileSync(dataPath, 'utf-8');
     return JSON.parse(data);
 };
 
-const findUserByEmail = (email) => {
+// 사용자 조회 (이메일)
+export const findUserByEmail = (email) => {
     const users = getUsers();
     return users.find(user => user.email === email);
 };
 
-// User1: Password@123, User2: Secure#456, User3: Test0910@
-const verifyPassword = (plainPassword, hashedPassword) => {
-    return bcrypt.compareSync(plainPassword, hashedPassword);
-};
+// 비밀번호 검증
+export const verifyPassword = (plainPassword, hashedPassword) =>  bcrypt.compareSync(plainPassword, hashedPassword); // Test0910@
 
-const saveUsers = (users) => {
+// 사용자 데이터 저장
+export const saveUsers = (users) => {
     fs.writeFileSync(dataPath, JSON.stringify(users, null, 2));
 };
 
-const findUserByNickname = (nickname) => {
+// 사용자 조회 (닉네임)
+export const findUserByNickname = (nickname) => {
     const users = getUsers();
     return users.find(user => user.nickname === nickname);
 };
 
-const saveUser = (userData) => {
+// 사용자 등록
+export const saveUser = (userData) => {
     const users = getUsers();
     const newUser = {
         user_id: users.length + 1,
@@ -45,5 +52,3 @@ const saveUser = (userData) => {
     saveUsers(users);
     return newUser.user_id;
 };
-
-module.exports = { getUsers, findUserByEmail, verifyPassword, saveUsers, findUserByNickname, saveUser };

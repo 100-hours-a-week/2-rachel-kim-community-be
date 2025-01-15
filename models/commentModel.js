@@ -1,12 +1,18 @@
 /* commentModel.js */
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const dataPath = path.join(__dirname, '../data/comments.json');
 const postsPath = path.join(__dirname, '../data/posts.json');
+
 const posts = JSON.parse(fs.readFileSync(postsPath, 'utf-8'));
 
 // 댓글 목록 조회
-const getCommentsByPostId = (post_id) => {
+export const getCommentsByPostId = (post_id) => {
     const comments = JSON.parse(fs.readFileSync(dataPath, 'utf-8')); // 댓글 데이터 읽기
     const filteredComments = comments.filter(comment => comment.post_id === Number(post_id));
     const users = JSON.parse(fs.readFileSync(path.join(__dirname, '../data/users.json'), 'utf-8')); // 사용자 데이터 읽기
@@ -20,13 +26,13 @@ const getCommentsByPostId = (post_id) => {
         return {
             ...comment,
             nickname: user ? user.nickname : comment.nickname,
-            profile_image_path: user ? user.profile_image_path : "/public/image/profile/default-profile.jpeg",
+            profile_image_path: user.profile_image_path,
         };
     });
 };
 
 // 댓글 등록
-const addComment = (postId, content, userId, userNickname, userProfileImage) => {    
+export const addComment = (postId, content, userId, userNickname, userProfileImage) => {    
     const comments = JSON.parse(fs.readFileSync(dataPath, 'utf-8')); // 파일에서 댓글 데이터 읽기
     const newComment = {
         comment_id: comments.length + 1,
@@ -35,14 +41,13 @@ const addComment = (postId, content, userId, userNickname, userProfileImage) => 
         user_id: userId,
         nickname: userNickname,
         created_at: new Date().toISOString(),
-        profile_image_path: userProfileImage || "/public/image/profile/default-profile.jpeg",
+        profile_image_path: userProfileImage,
     };
 
     comments.push(newComment); // 댓글 추가
     fs.writeFileSync(dataPath, JSON.stringify(comments, null, 2), 'utf-8'); // 파일 저장
 
-    // 댓글 수 증가
-    const postIndex = posts.findIndex(post => post.post_id === Number(postId));
+    const postIndex = posts.findIndex(post => post.post_id === Number(postId)); // 댓글 수 증가
     if (postIndex !== -1) {
         posts[postIndex].comment_count += 1;
         fs.writeFileSync(postsPath, JSON.stringify(posts, null, 2), 'utf-8');
@@ -52,11 +57,10 @@ const addComment = (postId, content, userId, userNickname, userProfileImage) => 
 };
 
 // 댓글 수정
-const updateComment = (post_id, comment_id, content, user_id) => {
+export const updateComment = (post_id, comment_id, content, user_id) => {
     const comments = JSON.parse(fs.readFileSync(dataPath, 'utf-8')); // 최신 데이터 읽기
 
-    // 댓글 찾기
-    const comment = comments.find(comment => comment.comment_id === Number(comment_id));
+    const comment = comments.find(comment => comment.comment_id === Number(comment_id)); // 댓글 찾기
 
     if (!comment) {
         throw new Error("댓글을 찾을 수 없습니다."); // 404 에러
@@ -70,20 +74,17 @@ const updateComment = (post_id, comment_id, content, user_id) => {
         throw new Error("권한이 없습니다."); // 403 에러
     }
 
-    // 댓글 수정
-    comment.comment_content = content;
+    comment.comment_content = content; // 댓글 수정
     comment.updated_at = new Date().toISOString();
 
-    // 변경 사항 저장
-    fs.writeFileSync(dataPath, JSON.stringify(comments, null, 2), 'utf-8');
+    fs.writeFileSync(dataPath, JSON.stringify(comments, null, 2), 'utf-8'); // 변경 사항 저장
     return comment;
 };
 
 // 댓글 삭제
-const deleteComment = (post_id, comment_id, user_id) => {
+export const deleteComment = (post_id, comment_id, user_id) => {
     const comments = JSON.parse(fs.readFileSync(dataPath, 'utf-8')); // 최신 데이터 읽기
-    // 댓글 인덱스 찾기
-    const commentIndex = comments.findIndex(comment => 
+    const commentIndex = comments.findIndex(comment => // 댓글 인덱스 찾기
         comment.post_id === Number(post_id) &&
         comment.comment_id === Number(comment_id)
     );
@@ -97,13 +98,10 @@ const deleteComment = (post_id, comment_id, user_id) => {
         throw new Error("권한이 없습니다."); // 403 에러
     }
 
-    // 댓글 삭제
-    comments.splice(commentIndex, 1);
-    // 변경된 데이터를 파일에 저장
-    fs.writeFileSync(dataPath, JSON.stringify(comments, null, 2), 'utf-8'); // 파일 저장
+    comments.splice(commentIndex, 1); // 댓글 삭제
+    fs.writeFileSync(dataPath, JSON.stringify(comments, null, 2), 'utf-8'); // 변경된 데이터를 파일에 저장
 
-    // 댓글 수 감소
-    const postIndex = posts.findIndex(post => post.post_id === Number(post_id));
+    const postIndex = posts.findIndex(post => post.post_id === Number(post_id)); // 댓글 수 감소
     if (postIndex !== -1) {
         posts[postIndex].comment_count = Math.max(0, posts[postIndex].comment_count - 1);
         fs.writeFileSync(postsPath, JSON.stringify(posts, null, 2), 'utf-8');
@@ -111,20 +109,12 @@ const deleteComment = (post_id, comment_id, user_id) => {
 };
 
 // 댓글 업데이트
-const updateCommentsByUserId = (user_id, updatedData) => {
+export const updateCommentsByUserId = (user_id, updatedData) => {
     const comments = JSON.parse(fs.readFileSync(dataPath, 'utf-8'));
-    const updatedComments = comments.map(comment => {
-        if (comment.user_id === user_id) {
-            return {
-                ...comment,
-                nickname: updatedData.nickname || comment.nickname,
-                profile_image_path: updatedData.profile_image_path || comment.profile_image_path,
-            };
-        }
-        return comment;
-    });
+    const updatedComments = comments.map(comment => ({
+        ...comment,
+        nickname: updatedData.nickname || comment.nickname,
+        profile_image_path: updatedData.profile_image_path || comment.profile_image_path,
+    }));
     fs.writeFileSync(dataPath, JSON.stringify(updatedComments, null, 2), 'utf-8');
 };
-
-module.exports = { getCommentsByPostId, addComment, updateComment, deleteComment, updateCommentsByUserId };
-

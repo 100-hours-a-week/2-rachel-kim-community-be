@@ -1,11 +1,15 @@
 /* postModel.js */
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const dataPath = path.join(__dirname, '../data/posts.json');
-const posts = require('../data/posts.json');
 
 // 게시글 목록 조회
-const getPosts = () => {
+export const getPosts = () => {
     const posts = JSON.parse(fs.readFileSync(dataPath, 'utf-8')); // 게시글 데이터 읽기
     const users = JSON.parse(fs.readFileSync(path.join(__dirname, '../data/users.json'), 'utf-8')); // 사용자 데이터 읽기
 
@@ -20,10 +24,11 @@ const getPosts = () => {
 };
 
 // 게시글 상세 조회
-const getPostById = (post_id) => {
+export const getPostById = (post_id) => {
     const posts = JSON.parse(fs.readFileSync(dataPath, 'utf-8'));
     const users = JSON.parse(fs.readFileSync(path.join(__dirname, '../data/users.json'), 'utf-8')); // 사용자 데이터 읽기
     const post = posts.find(post => post.post_id === Number(post_id));
+    
     if (post) {
         const user = users.find(user => user.user_id === post.user_id);
         return {
@@ -36,7 +41,8 @@ const getPostById = (post_id) => {
 };
 
 // 게시글 삭제
-const deletePost = (post_id) => {    
+export const deletePost = (post_id) => {    
+    const posts = JSON.parse(fs.readFileSync(dataPath, 'utf-8'));
     const index = posts.findIndex(post => post.post_id === Number(post_id));
 
     if (index !== -1) {
@@ -48,29 +54,23 @@ const deletePost = (post_id) => {
 };
 
 // 게시글 업데이트
-const updatePostsByUserId = (user_id, updatedData) => {
+export const updatePostsByUserId = (user_id, updatedData) => {
     const posts = JSON.parse(fs.readFileSync(dataPath, 'utf-8'));
-    const updatedPosts = posts.map(post => {
-        if (post.user_id === user_id) {
-            return {
-                ...post,
-                nickname: updatedData.nickname || post.nickname,
-                profile_image_path: updatedData.profile_image_path || post.profile_image_path,
-            };
-        }
-        return post;
-    });
+    const updatedPosts = posts.map(post => ({
+        ...post,
+        nickname: updatedData.nickname || post.nickname,
+        profile_image_path: updatedData.profile_image_path || post.profile_image_path,
+    }));
     fs.writeFileSync(dataPath, JSON.stringify(updatedPosts, null, 2), 'utf-8');
 };
 
 // 게시글 저장
-const savePost = (updatedPost) => {
+export const savePost = (updatedPost) => {
     const posts = JSON.parse(fs.readFileSync(dataPath, 'utf-8'));
     const postIndex = posts.findIndex(post => post.post_id === updatedPost.post_id);
+   
     if (postIndex !== -1) {
         posts[postIndex] = updatedPost;
         fs.writeFileSync(dataPath, JSON.stringify(posts, null, 2), 'utf-8');
     }
 };
-
-module.exports = { getPosts, getPostById, deletePost, updatePostsByUserId, savePost };

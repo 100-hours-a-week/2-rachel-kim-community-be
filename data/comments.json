@@ -61,5 +61,15 @@
     "nickname": "레이첼첼이",
     "created_at": "2025-01-14T05:29:57.443Z",
     "profile_image_path": "/public/image/profile/1736773712609-55047345-IMG_8138.jpeg"
+  },
+  {
+    "comment_id": 8,
+    "post_id": 3,
+    "comment_content": "히히 히힣",
+    "user_id": 1,
+    "nickname": "레이체리",
+    "created_at": "2025-01-14T15:54:56.837Z",
+    "profile_image_path": "/public/image/profile/1736232024240-647705081-IMG_8137.jpeg",
+    "updated_at": "2025-01-14T15:54:59.852Z"
   }
 ]

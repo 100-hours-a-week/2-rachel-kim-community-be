@@ -1,10 +1,13 @@
-const multer = require('multer');
-const path = require('path');
+import multer from 'multer';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        // 요청 경로에 따라 저장 경로 분기
-        const routePath = req.originalUrl || req.baseUrl;
+        const routePath = req.originalUrl || req.baseUrl;  // 요청 경로에 따라 저장 경로 분기
 
         if (routePath.includes('/api/users')) {
             cb(null, path.join(__dirname, '../public/image/profile')); // 프로필 사진 경로
@@ -22,4 +25,5 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage });
-module.exports = upload;
+
+export default upload;

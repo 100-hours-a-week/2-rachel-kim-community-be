@@ -1,9 +1,9 @@
 /* commentController.js */
-const { getCommentsByPostId, addComment, updateComment, deleteComment } = require('../models/commentModel');
-const { getPostById } = require('../models/postModel'); 
+import { getCommentsByPostId, addComment, updateComment, deleteComment } from '../models/commentModel.js';
+import { getPostById } from '../models/postModel.js';
 
 // 댓글 목록 조회
-const getPostComments = (req, res) => {
+export const getPostComments = (req, res) => {
     const { post_id } = req.params;
 
     if (!post_id) {
@@ -23,7 +23,7 @@ const getPostComments = (req, res) => {
 };
 
 // 댓글 등록 
-const createComment = (req, res) => {
+export const createComment = (req, res) => {
     const { post_id } = req.params;
     const { commentContent } = req.body;  
     const { user_id, nickname, profile_image_path } = req.user;
@@ -39,9 +39,8 @@ const createComment = (req, res) => {
     }
 
     try {
-        // 게시글 존재 여부 확인
         const post = getPostById(post_id); // 게시글을 찾는 함수 (예: DB에서 검색)
-        if (!post) {
+        if (!post) { // 게시글 존재 여부 확인
             console.error('게시글을 찾을 수 없습니다:', post_id);
             return res.status(404).json({ status: 404, message: "not_a_single_post", data: null });
         }
@@ -55,23 +54,20 @@ const createComment = (req, res) => {
 };
 
 // 댓글 수정
-const editComment = (req, res) => {
+export const editComment = (req, res) => {
     const { post_id, comment_id } = req.params;
     const { commentContent } = req.body;
     const { user_id } = req.user; // 현재 로그인한 사용자 ID
 
-    // 요청 데이터 검증
-    if (!post_id || !comment_id || !commentContent || !user_id) {
+    if (!post_id || !comment_id || !commentContent || !user_id) { // 요청 데이터 검증
         return res.status(400).json({ status: 400, message: "missing_required_fields", data: null });
     }
 
     try {
-        // 모델 호출
-        const updatedComment = updateComment(post_id, comment_id, commentContent, user_id);
+        const updatedComment = updateComment(post_id, comment_id, commentContent, user_id); // 모델 호출
         return res.status(200).json({ status: 200, message: "update_comment_success", data: updatedComment });
     } catch (error) {
-        // 모델에서 던진 에러 메시지에 따라 상태 코드 매핑
-        if (error.message === "댓글을 찾을 수 없습니다.") {
+        if (error.message === "댓글을 찾을 수 없습니다.") { // 모델에서 던진 에러 메시지에 따라 상태 코드 매핑
             return res.status(404).json({ status: 404, message: "not_a_single_comment", data: null });
         }
         if (error.message === "권한이 없습니다.") {
@@ -80,14 +76,12 @@ const editComment = (req, res) => {
         if (error.message === "댓글이 해당 게시글에 속하지 않습니다.") {
             return res.status(400).json({ status: 400, message: "invalid_post_id", data: null });
         }
-
-        // 기타 에러는 500 처리
         return res.status(500).json({ status: 500, message: "internal_server_error", data: null });
     }
 };
 
 // 댓글 삭제
-const removeComment = (req, res) => {
+export const removeComment = (req, res) => {
     const { post_id, comment_id } = req.params;   
     const { user_id } = req.user; // JWT에서 추출된 id
 
@@ -96,17 +90,14 @@ const removeComment = (req, res) => {
     }
 
     try {
-        // 댓글 가져오기
         const postComments = getCommentsByPostId(post_id); // post_id에 해당하는 댓글들 가져오기
-        const comment = postComments.find(c => c.comment_id === Number(comment_id));
+        const comment = postComments.find(c => c.comment_id === Number(comment_id)); // 댓글 가져오기
 
-        // 댓글이 존재하지 않을 경우
-        if (!comment) {
+        if (!comment) { // 댓글이 존재하지 않을 경우
             return res.status(404).json({ status: 404, message: "not_a_single_comment", data: null });
         }
 
-        // 권한 확인 (작성자가 아닌 경우)
-        if (comment.user_id !== user_id) {
+        if (comment.user_id !== user_id) { // 권한 확인 (작성자가 아닌 경우)
             return res.status(403).json({ status: 403, message: "required_permission", data: null });
         }
 
@@ -116,6 +107,3 @@ const removeComment = (req, res) => {
         return res.status(500).json({ status: 500, message: "internal_server_error", data: null });
     }
 };
-
-
-module.exports = { getPostComments, createComment, editComment, removeComment };
