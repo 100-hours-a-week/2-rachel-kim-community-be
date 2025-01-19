@@ -2,12 +2,12 @@
   {
     "user_id": 1,
     "email": "tomy0910@naver.com",
-    "password": "$2b$10$tGgxvKxDtofUnayyR5riuOZOcGLoeJlXeaMvczpsKLiJcO8b/5Q/m",
+    "password": "$2b$10$CJavOSCFkz.7FlukIQ1tRuovKt0Lc71Dv/4aKZstCHDKANhrIv6Jm",
     "nickname": "레이체리",
     "created_at": "2025-01-07T06:38:41.059Z",
-    "updated_at": "2025-01-14T15:55:17.501Z",
+    "updated_at": "2025-01-17T15:59:13.363Z",
     "deleted_at": null,
-    "profile_image_path": "/public/image/profile/1736232024240-647705081-IMG_8137.jpeg"
+    "profile_image_path": "/public/image/profile/1737129553353-205101188-IMG_8138.jpeg"
   },
   {
     "user_id": 2,
@@ -15,8 +15,8 @@
     "password": "$2b$10$7cvDgvq0h6hPTHGxfSjhEeGclyx4KaimVDTGq3XYYshOIwJcGv/iu",
     "nickname": "레이첼첼이",
     "created_at": "2025-01-13T08:26:22.102Z",
-    "updated_at": "2025-01-13T14:07:06.133Z",
+    "updated_at": "2025-01-17T16:00:12.679Z",
     "deleted_at": null,
-    "profile_image_path": "/public/image/profile/1736773712609-55047345-IMG_8138.jpeg"
+    "profile_image_path": "/public/image/profile/1737129612675-851912255-IMG_8137.jpeg"
   }
 ]

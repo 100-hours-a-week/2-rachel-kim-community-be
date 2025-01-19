@@ -4,6 +4,7 @@ import express from 'express';
 import path from 'path';
 import cors from 'cors';
 import bodyParser from 'body-parser';
+import session from 'express-session';
 import { fileURLToPath } from 'url';
 
 import userRoutes from './routes/userRoutes.js';
@@ -18,13 +19,24 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = 4000;
 
+// 세션 설정
+app.use(session({
+    secret: process.env.SESSION_SECRET, // 임의의 비밀 키
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        httpOnly: true,
+        secure: false, // HTTPS 사용 시 true
+        sameSite: 'lax', // 보다 간단한 세션 처리를 위해 'lax' 사용
+        maxAge: 1000 * 60 * 60 * 24, // 1일
+    },
+}));
+
 // CORS 설정
-app.use(cors()); 
-/*app.use(cors({
-    origin: "http://3.39.23.86:3000", // 프론트엔드 주소
-    methods: "GET,POST,PUT,DELETE",
-    credentials: true
-  }));*/
+app.use(cors({
+    origin: "http://localhost:3000", // 프론트엔드 주소
+    credentials: true,
+}));
 
 // JSON 데이터 처리를 위한 미들웨어 설정
 app.use(bodyParser.json());

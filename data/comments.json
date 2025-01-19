@@ -1,75 +1,42 @@
 [
   {
     "comment_id": 1,
-    "post_id": 2,
-    "comment_content": "안녕하세요",
+    "post_id": 1,
+    "comment_content": "히히 키티좋아",
     "user_id": 1,
-    "nickname": "레이체리",
-    "created_at": "2025-01-14T05:28:34.326Z",
-    "profile_image_path": "/public/image/profile/1736232024240-647705081-IMG_8137.jpeg"
+    "nickname": "레이체리리리리",
+    "created_at": "2025-01-16T15:30:15.859Z",
+    "profile_image_path": "/public/image/profile/1737129486072-62519608-IMG_0418.jpeg",
+    "updated_at": "2025-01-16T15:30:24.438Z"
   },
   {
     "comment_id": 2,
     "post_id": 2,
-    "comment_content": "저는 레이체리에요",
+    "comment_content": "보리는 기엽다 우리집 강쥐니깐!",
     "user_id": 1,
-    "nickname": "레이체리",
-    "created_at": "2025-01-14T05:28:40.525Z",
-    "profile_image_path": "/public/image/profile/1736232024240-647705081-IMG_8137.jpeg"
+    "nickname": "레이체리리리리",
+    "created_at": "2025-01-16T15:30:50.717Z",
+    "profile_image_path": "/public/image/profile/1737129486072-62519608-IMG_0418.jpeg",
+    "updated_at": "2025-01-16T15:30:56.603Z"
   },
   {
     "comment_id": 3,
     "post_id": 1,
-    "comment_content": "나는 레이체리지롱",
-    "user_id": 1,
-    "nickname": "레이체리",
-    "created_at": "2025-01-14T05:28:49.005Z",
-    "profile_image_path": "/public/image/profile/1736232024240-647705081-IMG_8137.jpeg"
+    "comment_content": "멋쟁이! 킼킼",
+    "user_id": 2,
+    "nickname": "레이체리리리리",
+    "created_at": "2025-01-16T15:31:22.449Z",
+    "profile_image_path": "/public/image/profile/1737129486072-62519608-IMG_0418.jpeg",
+    "updated_at": "2025-01-16T15:31:27.168Z"
   },
   {
     "comment_id": 4,
-    "post_id": 1,
-    "comment_content": "나는 첼첼이",
-    "user_id": 2,
-    "nickname": "레이첼첼이",
-    "created_at": "2025-01-14T05:29:29.870Z",
-    "profile_image_path": "/public/image/profile/1736773712609-55047345-IMG_8138.jpeg"
-  },
-  {
-    "comment_id": 5,
-    "post_id": 1,
-    "comment_content": "우르롹끼",
-    "user_id": 2,
-    "nickname": "레이첼첼이",
-    "created_at": "2025-01-14T05:29:34.061Z",
-    "profile_image_path": "/public/image/profile/1736773712609-55047345-IMG_8138.jpeg"
-  },
-  {
-    "comment_id": 6,
     "post_id": 2,
-    "comment_content": "보리기엽다",
+    "comment_content": "보송강쥐 천년살아 살앙해",
     "user_id": 2,
-    "nickname": "레이첼첼이",
-    "created_at": "2025-01-14T05:29:49.924Z",
-    "profile_image_path": "/public/image/profile/1736773712609-55047345-IMG_8138.jpeg"
-  },
-  {
-    "comment_id": 7,
-    "post_id": 2,
-    "comment_content": "우리집 강아지지롱 킼킥",
-    "user_id": 2,
-    "nickname": "레이첼첼이",
-    "created_at": "2025-01-14T05:29:57.443Z",
-    "profile_image_path": "/public/image/profile/1736773712609-55047345-IMG_8138.jpeg"
-  },
-  {
-    "comment_id": 8,
-    "post_id": 3,
-    "comment_content": "히히 히힣",
-    "user_id": 1,
-    "nickname": "레이체리",
-    "created_at": "2025-01-14T15:54:56.837Z",
-    "profile_image_path": "/public/image/profile/1736232024240-647705081-IMG_8137.jpeg",
-    "updated_at": "2025-01-14T15:54:59.852Z"
+    "nickname": "레이체리리리리",
+    "created_at": "2025-01-16T15:31:51.668Z",
+    "profile_image_path": "/public/image/profile/1737129486072-62519608-IMG_0418.jpeg",
+    "updated_at": "2025-01-17T16:00:21.516Z"
   }
 ]

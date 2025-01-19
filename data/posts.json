@@ -5,22 +5,22 @@
     "post_title": "히히 테스트해",
     "post_content": "쫗아요",
     "post_image_path": "/public/image/posts/1736750206830-97190401-IMG_0418.jpeg",
-    "nickname": "레이체리",
-    "profile_image_path": "/public/image/profile/1736232024240-647705081-IMG_8137.jpeg",
+    "nickname": "레이체리리리리",
+    "profile_image_path": "/public/image/profile/1737129486072-62519608-IMG_0418.jpeg",
     "created_at": "2025-01-13T06:36:46.835Z",
     "updated_at": "2025-01-13T06:36:46.835Z",
     "likes": 2,
     "likedUsers": [
       3,
-      1,
-      2
+      2,
+      1
     ],
     "views": 2,
     "viewedUsers": [
       2,
       1
     ],
-    "comment_count": 3
+    "comment_count": 4
   },
   {
     "post_id": 2,
@@ -28,8 +28,8 @@
     "post_title": "나는 첼첼이",
     "post_content": "키티가 좋아",
     "post_image_path": "/public/image/posts/1736829048654-39602938-IMG_1984.jpeg",
-    "nickname": "레이첼첼이",
-    "profile_image_path": "/public/image/profile/1736773712609-55047345-IMG_8138.jpeg",
+    "nickname": "레이체리리리리",
+    "profile_image_path": "/public/image/profile/1737129486072-62519608-IMG_0418.jpeg",
     "created_at": "2025-01-14T01:49:21.344Z",
     "updated_at": "2025-01-14T04:30:48.658Z",
     "likes": 2,
@@ -42,6 +42,6 @@
       2,
       1
     ],
-    "comment_count": 4
+    "comment_count": 6
   }
 ]

@@ -1,63 +1,61 @@
 /* userController.js */
 import { findUserByEmail, verifyPassword, findUserByNickname, saveUser, getUsers, saveUsers } from '../models/userModel.js';
-import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import { updatePostsByUserId } from '../models/postModel.js';
 import { updateCommentsByUserId } from '../models/commentModel.js';
 
-// 로그인 응답
+// 로그인
 export const login = (req, res) => {
     const { email, password } = req.body;
 
-    if (!email) { // 필수 입력값 검증
-        return res.status(400).json({ status: 400, message: "required_email", data: null });
-    }
-    if (!password) {
-        return res.status(400).json({ status: 400, message: "required_password", data: null });
+    if (!email || !password) { // 필수 입력값 검증
+        return res.status(400).json({ message: 'email_and_password_required' });
     }
 
     try {
         const user = findUserByEmail(email); // 사용자 조회
-        if (!user) {
-            return res.status(401).json({ status: 401, message: "invalid_email_or_password", data: null });
+        if (!user || !verifyPassword(password, user.password)) {
+            return res.status(401).json({ message: 'invalid_credentials' });
         }
-
-        const isPasswordValid = verifyPassword(password, user.password); // 비밀번호 검증
-        if (!isPasswordValid) {
-            return res.status(401).json({ status: 401, message: "invalid_email_or_password", data: null });
-        }
-
-        const token = jwt.sign( // JWT 토큰 생성 
-            {
-                user_id: user.user_id,
-                email: user.email,
-                nickname: user.nickname, 
-                profile_image_path: user.profile_image_path, 
-            },
-            process.env.JWT_SECRET_KEY,
-            { expiresIn: '30d' }
-        );
-
-        res.json({ // 성공 응답
-            status: 200,
-            message: "login_success",
-            data: { ...user, auth_token: token },
+    
+        req.session.user = { // 사용자 세션 생성 및 사용자 정보 저장
+            user_id: user.user_id,
+            email: user.email,
+            nickname: user.nickname,
+            profile_image_path: user.profile_image_path // 프로필 이미지 추가
+        };
+        
+        req.session.save(err => { // 세션 저장 후 응답
+            if (err) {
+                console.error("세션 저장 오류:", err);
+                return res.status(500).json({ message: "session_save_error" });
+            }
+            res.json({ status: 200, message: "login_success" });
         });
     } catch (error) {
         res.status(500).json({ status: 500, message: "internal_server_error", data: null });
     }
 };
 
-// 로그인 상태 확인
-export const checkAuthStatus = (req, res) => {
-    if (!req.user) { // req.user가 없으면 인증 실패 처리
-        return res.status(401).json({ status: 401, message: "user_not_authenticated" });
-    }
+// 로그아웃
+export const logout = (req, res) => {
+    req.session.destroy(err => {
+        if (err) {
+            return res.status(500).json({ message: 'internal_server_error' })
+        }
+        res.clearCookie('connect.sid');
+        res.status(200).json({ message: 'logout_success' });
+    });
+}
 
-    res.status(200).json({ // 인증 성공 시 사용자 정보 반환
-        status: 200,
-        message: null,
-        data: { ...req.user },
+// 로그인 상태 확인
+export const getAuthStatus = (req, res) => {
+    if (!req.session.user) { // 세션이 없으면 인증 실패
+        return res.status(401).json({ message: "user_not_authenticated" });
+    }
+    res.status(200).json({ 
+        message: 'authenticated',
+        user: req.session.user // 클라이언트가 사용할 사용자 정보 반환
     });
 };
 
@@ -177,7 +175,7 @@ export const updateUser = (req, res) => {
     const { user_id } = req.params;
     const { user_id: authenticatedUserId } = req.user;
     const { nickname } = req.body;
-    const profile_image_path = req.file ? `/public/image/profile/${req.file.filename}` : null;
+    const profile_image_path = req.file ? `/public/image/profile/${req.file.filename}` : users[userIndex].profile_image_path;
 
     if (!user_id || !nickname) {
         return res.status(400).json({ status: 400, message: "invalid_request", data: null });
@@ -201,10 +199,18 @@ export const updateUser = (req, res) => {
         };
 
         saveUsers(users);
-        updatePostsByUserId(Number(user_id), { nickname, profile_image_path });  // 게시글과 댓글 데이터 업데이트
-        updateCommentsByUserId(Number(user_id), { nickname, profile_image_path });
 
-        return res.status(200).json({ status: 200, message: "update_profile_success", data: { user_id: Number(user_id) } });
+        req.session.user.nickname = nickname; // 세션 데이터 갱신
+        req.session.user.profile_image_path = profile_image_path;
+
+        return res.status(200).json({ 
+            status: 200, 
+            message: "update_profile_success", 
+            data: { 
+                user_id: Number(user_id), 
+                profile_image_path: users[userIndex].profile_image_path // 변경된 경로 반환
+            } 
+        });
     } catch (error) {
         return res.status(500).json({ status: 500, message: "internal_server_error", data: null });
     }
