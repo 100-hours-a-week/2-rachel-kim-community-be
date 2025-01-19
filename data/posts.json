@@ -2,46 +2,41 @@
   {
     "post_id": 1,
     "user_id": 1,
-    "post_title": "히히 테스트해",
-    "post_content": "쫗아요",
-    "post_image_path": "/public/image/posts/1736750206830-97190401-IMG_0418.jpeg",
-    "nickname": "레이체리리리리",
-    "profile_image_path": "/public/image/profile/1737129486072-62519608-IMG_0418.jpeg",
-    "created_at": "2025-01-13T06:36:46.835Z",
-    "updated_at": "2025-01-13T06:36:46.835Z",
-    "likes": 2,
-    "likedUsers": [
-      3,
-      2,
-      1
-    ],
+    "post_title": "안녕하시소스통",
+    "post_content": "저는 키티가 좋아요",
+    "post_image_path": "/public/image/posts/1737291667367-956871635-IMG_8073.jpeg",
+    "nickname": "레이체리",
+    "profile_image_path": "/public/image/profile/1737129553353-205101188-IMG_8138.jpeg",
+    "created_at": "2025-01-19T13:01:07.378Z",
+    "updated_at": "2025-01-19T13:01:07.378Z",
+    "likes": 0,
+    "likedUsers": [],
     "views": 2,
     "viewedUsers": [
       2,
       1
     ],
-    "comment_count": 4
+    "comment_count": 2
   },
   {
     "post_id": 2,
     "user_id": 2,
-    "post_title": "나는 첼첼이",
-    "post_content": "키티가 좋아",
-    "post_image_path": "/public/image/posts/1736829048654-39602938-IMG_1984.jpeg",
-    "nickname": "레이체리리리리",
-    "profile_image_path": "/public/image/profile/1737129486072-62519608-IMG_0418.jpeg",
-    "created_at": "2025-01-14T01:49:21.344Z",
-    "updated_at": "2025-01-14T04:30:48.658Z",
-    "likes": 2,
+    "post_title": "귀여운 강아지가 알고싶나요?",
+    "post_content": "바로 우리집 보리입니다.",
+    "post_image_path": "/public/image/posts/1737291723881-332579220-IMG_4442.jpeg",
+    "nickname": "레이첼첼이",
+    "profile_image_path": "/public/image/profile/1737129612675-851912255-IMG_8137.jpeg",
+    "created_at": "2025-01-19T13:02:03.891Z",
+    "updated_at": "2025-01-19T13:02:03.891Z",
+    "likes": 1,
     "likedUsers": [
-      2,
-      1
+      2
     ],
     "views": 2,
     "viewedUsers": [
       2,
       1
     ],
-    "comment_count": 6
+    "comment_count": 2
   }
 ]

@@ -1,6 +1,7 @@
 /* commentModel.js */
 import fs from 'fs';
 import path from 'path';
+import { updateCommentCount } from './postModel.js';
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -47,13 +48,9 @@ export const addComment = (postId, content, userId, userNickname, userProfileIma
     comments.push(newComment); // 댓글 추가
     fs.writeFileSync(dataPath, JSON.stringify(comments, null, 2), 'utf-8'); // 파일 저장
 
-    const postIndex = posts.findIndex(post => post.post_id === Number(postId)); // 댓글 수 증가
-    if (postIndex !== -1) {
-        posts[postIndex].comment_count += 1;
-        fs.writeFileSync(postsPath, JSON.stringify(posts, null, 2), 'utf-8');
-    }
+    updateCommentCount(postId, true); // 댓글 수 업데이트
 
-    return newComment;
+    return newComment; 
 };
 
 // 댓글 수정
@@ -101,11 +98,7 @@ export const deleteComment = (post_id, comment_id, user_id) => {
     comments.splice(commentIndex, 1); // 댓글 삭제
     fs.writeFileSync(dataPath, JSON.stringify(comments, null, 2), 'utf-8'); // 변경된 데이터를 파일에 저장
 
-    const postIndex = posts.findIndex(post => post.post_id === Number(post_id)); // 댓글 수 감소
-    if (postIndex !== -1) {
-        posts[postIndex].comment_count = Math.max(0, posts[postIndex].comment_count - 1);
-        fs.writeFileSync(postsPath, JSON.stringify(posts, null, 2), 'utf-8');
-    }
+    updateCommentCount(post_id, false); // 댓글 수 업데이트
 };
 
 // 댓글 업데이트

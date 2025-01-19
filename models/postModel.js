@@ -74,3 +74,17 @@ export const savePost = (updatedPost) => {
         fs.writeFileSync(dataPath, JSON.stringify(posts, null, 2), 'utf-8');
     }
 };
+
+// 댓글 수 관리
+export const updateCommentCount = (postId, increment = true) => {
+    const posts = JSON.parse(fs.readFileSync(dataPath, 'utf-8'));
+    const postIndex = posts.findIndex(post => post.post_id === Number(postId));
+
+    if (postIndex !== -1) {
+        posts[postIndex].comment_count += increment ? 1 : -1;
+        posts[postIndex].comment_count = Math.max(0, posts[postIndex].comment_count); // 음수 방지
+        fs.writeFileSync(dataPath, JSON.stringify(posts, null, 2), 'utf-8');
+    } else {
+        throw new Error(`Post with ID ${postId} not found`);
+    }
+};
