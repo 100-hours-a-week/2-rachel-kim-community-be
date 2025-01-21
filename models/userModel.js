@@ -1,54 +1,93 @@
 /* userModel.js */
-import fs from 'fs';
-import path from 'path';
+import pool from '../db.js';
 import bcrypt from 'bcrypt';
-import { fileURLToPath } from 'url';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename)
-
-const dataPath = path.join(__dirname, '../data/users.json');
-
-// 사용자 목록 조회
-export const getUsers = () => {
-    const data = fs.readFileSync(dataPath, 'utf-8');
-    return JSON.parse(data);
-};
-
-// 사용자 조회 (이메일)
-export const findUserByEmail = (email) => {
-    const users = getUsers();
-    return users.find(user => user.email === email);
-};
-
-// 비밀번호 검증
-export const verifyPassword = (plainPassword, hashedPassword) =>  bcrypt.compareSync(plainPassword, hashedPassword); // Test0910@
-
-// 사용자 데이터 저장
-export const saveUsers = (users) => {
-    fs.writeFileSync(dataPath, JSON.stringify(users, null, 2));
+// 사용자 조회 (이메일) 
+export const findUserByEmail = async (email) => {
+    let conn;
+    try {
+        conn = await pool.getConnection();
+        const rows = await conn.query('SELECT * FROM User WHERE email = ? AND deleted_at IS NULL', [email]);
+        return rows[0];
+    } finally {
+        if (conn) conn.release();
+    }
 };
 
 // 사용자 조회 (닉네임)
-export const findUserByNickname = (nickname) => {
-    const users = getUsers();
-    return users.find(user => user.nickname === nickname);
+export const findUserByNickname = async (nickname) => {
+    let conn;
+    try {
+        conn = await pool.getConnection();
+        const rows = await conn.query('SELECT * FROM User WHERE nickname = ? AND deleted_at IS NULL', [nickname]);
+        return rows[0];
+    } finally {
+        if (conn) conn.release();
+    }
+};
+
+// 비밀번호 검증
+export const verifyPassword = async (plainPassword, hashedPassword) => {
+    try {
+        return await bcrypt.compare(plainPassword, hashedPassword);
+    } catch (error) {
+        console.error('비밀번호 검증 오류:', error);
+        throw error;
+    }
 };
 
 // 사용자 등록
-export const saveUser = (userData) => {
-    const users = getUsers();
-    const newUser = {
-        user_id: users.length + 1,
-        email: userData.email,
-        password: userData.password,
-        nickname: userData.nickname,
-        profile_image_path: userData.profileImagePath,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-        deleted_at: null,
-    };
-    users.push(newUser);
-    saveUsers(users);
-    return newUser.user_id;
+export const saveUser = async (userData) => {
+    let conn;
+    try {
+        conn = await pool.getConnection();
+        const result = await conn.query(
+            'INSERT INTO User (email, password, nickname, profile_image_path) VALUES (?, ?, ?, ?)',
+            [userData.email, userData.password, userData.nickname, userData.profile_image_path]
+        );
+        return result.insertId;
+    } finally {
+        if (conn) conn.release();
+    }
+};
+
+// 사용자 정보 업데이트
+export const updateUser = async (userId, updates) => {
+    let conn;
+    try {
+        conn = await pool.getConnection();
+        const fields = [];
+        const values = [];
+        if (updates.nickname) {
+            fields.push('nickname = ?');
+            values.push(updates.nickname);
+        }
+        if (updates.profile_image_path) {
+            fields.push('profile_image_path = ?');
+            values.push(updates.profile_image_path);
+        }
+        if (updates.password) { 
+            fields.push('password = ?');
+            values.push(updates.password);
+        }
+
+        if (fields.length > 0) {
+            const query = `UPDATE User SET ${fields.join(', ')}, updated_at = NOW() WHERE user_id = ?`;
+            values.push(userId);
+            await conn.query(query, values);
+        }
+    } finally {
+        if (conn) conn.release();
+    }
+};
+
+// 사용자 삭제 (소프트 삭제)
+export const deleteUser = async (userId) => {
+    let conn;
+    try {
+        conn = await pool.getConnection();
+        await conn.query('UPDATE User SET deleted_at = NOW() WHERE user_id = ?', [userId]);
+    } finally {
+        if (conn) conn.release();
+    }
 };

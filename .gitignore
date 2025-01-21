@@ -160,7 +160,6 @@ ClientBin/
 *.dbproj.schemaview
 *.pfx
 *.publishsettings
-node_modules/
 bower_components/
 
 # RIA/Silverlight projects
@@ -198,3 +197,18 @@ FakesAssemblies/
 # Environment variable files
 .env
 .env.*
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Logs
+logs/
+
+# MariaDB
+*.sql
+*.db
+*.sqlite
+*.sqlite3

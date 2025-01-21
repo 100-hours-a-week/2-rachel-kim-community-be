@@ -39,7 +39,7 @@ app.use(
 app.use(
     cors({
         origin: 'http://localhost:3000', // 클라이언트 도메인
-        methods: ['GET', 'POST', 'PUT', 'DELETE'],
+        methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
         allowedHeaders: ['Content-Type', 'Authorization'],
         credentials: true, // 쿠키 허용
     })
