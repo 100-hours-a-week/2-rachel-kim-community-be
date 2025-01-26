@@ -223,15 +223,17 @@ export const deleteUser = async (req, res) => {
 
     try {
         await deleteUserModel(user_id);
+
         req.session.destroy(err => {
             if (err) {
                 console.error('세션 삭제 오류:', err);
                 return res.status(500).json({ message: 'internal_server_error' });
             }
+            res.clearCookie('connect.sid'); // 세션 쿠키 삭제
             res.status(200).json({ message: 'delete_user_success' });
         });
     } catch (error) {
-        console.error(error);
+        console.error(`회원 삭제 오류: ${error}`);
         res.status(500).json({ message: 'internal_server_error' });
     }
 };

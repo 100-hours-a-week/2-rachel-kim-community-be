@@ -1,9 +1,8 @@
 /* commentController.js */
 import { getCommentsByPostId, addComment, updateComment, deleteComment } from '../models/commentModel.js';
-import { getPostById } from '../models/postModel.js';
 
 // 댓글 목록 조회
-export const getPostComments = (req, res) => {
+export const getPostComments = async (req, res) => {
     const { post_id } = req.params;
 
     if (!post_id) {
@@ -11,19 +10,19 @@ export const getPostComments = (req, res) => {
     }
 
     try {
-        const comments = getCommentsByPostId(post_id); // 모델 호출
+        const comments = await getCommentsByPostId(post_id);
         return res.status(200).json({ status: 200, message: "get_comments_success", data: comments });
     } catch (error) {
         if (error.message === "댓글이 없습니다.") {
             return res.status(404).json({ status: 404, message: "not_a_single_comment", data: null });
         }
-
+        console.error(`댓글 조회 오류: ${error.message}`);
         return res.status(500).json({ status: 500, message: "internal_server_error", data: null });
     }
 };
 
 // 댓글 등록 
-export const createComment = (req, res) => {
+export const createComment = async (req, res) => {
     const { post_id } = req.params;
     const { commentContent } = req.body;  
     const { user_id, nickname, profile_image_path } = req.user;
@@ -39,16 +38,10 @@ export const createComment = (req, res) => {
     }
 
     try {
-        const post = getPostById(post_id); // 게시글을 찾는 함수 (예: DB에서 검색)
-        if (!post) { // 게시글 존재 여부 확인
-            console.error('게시글을 찾을 수 없습니다:', post_id);
-            return res.status(404).json({ status: 404, message: "not_a_single_post", data: null });
-        }
-        
-        const newComment = addComment(post_id, commentContent, user_id, nickname, profile_image_path);
+        const newComment = await addComment(post_id, commentContent, user_id, nickname, profile_image_path);
         return res.status(201).json({ status: 201, message: "write_comment_success", data: newComment });
     } catch (error) {
-        console.error('addComment 함수 에러:', error.message);
+        console.error(`댓글 등록 오류: ${error.message}`);
         return res.status(500).json({ status: 500, message: "internal_server_error", data: null });
     }
 };
@@ -67,21 +60,13 @@ export const editComment = (req, res) => {
         const updatedComment = updateComment(post_id, comment_id, commentContent, user_id); // 모델 호출
         return res.status(200).json({ status: 200, message: "update_comment_success", data: updatedComment });
     } catch (error) {
-        if (error.message === "댓글을 찾을 수 없습니다.") { // 모델에서 던진 에러 메시지에 따라 상태 코드 매핑
-            return res.status(404).json({ status: 404, message: "not_a_single_comment", data: null });
-        }
-        if (error.message === "권한이 없습니다.") {
-            return res.status(403).json({ status: 403, message: "required_permission", data: null });
-        }
-        if (error.message === "댓글이 해당 게시글에 속하지 않습니다.") {
-            return res.status(400).json({ status: 400, message: "invalid_post_id", data: null });
-        }
+        console.error(`댓글 수정 오류: ${error.message}`);
         return res.status(500).json({ status: 500, message: "internal_server_error", data: null });
     }
 };
 
 // 댓글 삭제
-export const removeComment = (req, res) => {
+export const removeComment = async (req, res) => {
     const { post_id, comment_id } = req.params;   
     const { user_id } = req.user; // JWT에서 추출된 id
 
@@ -90,20 +75,10 @@ export const removeComment = (req, res) => {
     }
 
     try {
-        const postComments = getCommentsByPostId(post_id); // post_id에 해당하는 댓글들 가져오기
-        const comment = postComments.find(c => c.comment_id === Number(comment_id)); // 댓글 가져오기
-
-        if (!comment) { // 댓글이 존재하지 않을 경우
-            return res.status(404).json({ status: 404, message: "not_a_single_comment", data: null });
-        }
-
-        if (comment.user_id !== user_id) { // 권한 확인 (작성자가 아닌 경우)
-            return res.status(403).json({ status: 403, message: "required_permission", data: null });
-        }
-
-        deleteComment(post_id, comment_id, user_id);
+        await deleteComment(post_id, comment_id, user_id);
         return res.status(200).json({ status: 200, message: "delete_comment_success", data: null });
     } catch (error) {
+        console.error(`댓글 삭제 오류: ${error.message}`);
         return res.status(500).json({ status: 500, message: "internal_server_error", data: null });
     }
 };

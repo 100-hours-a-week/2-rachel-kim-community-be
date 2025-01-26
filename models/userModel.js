@@ -81,12 +81,12 @@ export const updateUser = async (userId, updates) => {
     }
 };
 
-// 사용자 삭제 (소프트 삭제)
+// 사용자 삭제 (하드 삭제)
 export const deleteUser = async (userId) => {
     let conn;
     try {
         conn = await pool.getConnection();
-        await conn.query('UPDATE User SET deleted_at = NOW() WHERE user_id = ?', [userId]);
+        await conn.query('DELETE FROM User WHERE user_id = ?', [userId]);
     } finally {
         if (conn) conn.release();
     }
