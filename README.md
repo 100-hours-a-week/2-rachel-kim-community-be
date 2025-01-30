@@ -60,7 +60,7 @@
 ## ⚙ 기술 스택
 ### Back-end
 <div>
-<img src="" width="80" alt="NodeJS">
+<img src="https://github.com/user-attachments/assets/6a45c494-9a1a-4b45-8d02-949e60afeb57" width="80" alt="NodeJS">
 <img src="https://github.com/user-attachments/assets/85ae00b1-6881-421d-baa4-f1ceee20c751" width="80" alt="ExpressJS"></div>
 
 ### Infra
