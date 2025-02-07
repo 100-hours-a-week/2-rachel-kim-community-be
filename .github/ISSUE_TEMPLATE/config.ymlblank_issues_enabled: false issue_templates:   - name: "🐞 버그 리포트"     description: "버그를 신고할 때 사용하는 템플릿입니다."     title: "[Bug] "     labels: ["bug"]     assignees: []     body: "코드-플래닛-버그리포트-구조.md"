@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+issue_templates:
+  - name: "🐞 버그 리포트"
+    description: "버그를 신고할 때 사용하는 템플릿입니다."
+    title: "[Bug] "
+    labels: ["bug"]
+    assignees: []
+    body: "코드-플래닛-버그리포트-구조.md"
