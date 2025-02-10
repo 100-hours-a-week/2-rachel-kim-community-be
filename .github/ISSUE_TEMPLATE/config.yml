@@ -5,4 +5,4 @@ issue_templates:
     title: "[Bug] "
     labels: ["bug"]
     assignees: []
-    body: .github/ISSUE_TEMPLATE/코드-플래닛-버그리포트-구조.md
+    body: 코드-플래닛-버그리포트-구조.md
