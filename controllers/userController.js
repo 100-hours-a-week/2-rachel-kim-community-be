@@ -17,17 +17,19 @@ export const login = async (req, res) => {
     }
 
     try {
-        const userResult = await findUserByEmail(email);
-        const user = userResult && userResult[0]; // 배열의 첫 번째 요소를 가져옴
+        const user = await findUserByEmail(email);
         if (!user) {
+	    console.log("❌ 사용자 정보 없음: 이메일이 DB에 존재하지 않음");
             return res.status(401).json({ message: 'invalid_credentials' });
         }
 
         const isPasswordValid = await verifyPassword(password, user.password);
-        if (!isPasswordValid) {
+
+	if (!isPasswordValid) {
+            console.log("❌ 비밀번호 불일치로 로그인 실패");
             return res.status(401).json({ message: 'invalid_credentials' });
         }
-
+	
         req.session.user = {
             user_id: user.user_id,
             email: user.email,

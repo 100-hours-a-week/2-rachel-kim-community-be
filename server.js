@@ -38,12 +38,14 @@ app.use(
 // CORS 설정
 app.use(
     cors({
-        origin: 'http://localhost:3000', // 클라이언트 도메인
-        methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+        origin: ['http://54.180.244.105:3000', 'http://localhost:3000'], // ✅ 프론트엔드 EC2 도메인 추가
+        methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
         allowedHeaders: ['Content-Type', 'Authorization'],
         credentials: true, // 쿠키 허용
     })
 );
+
+app.options('*', cors());
 
 // Helmet 보안 헤더 설정
 app.use(

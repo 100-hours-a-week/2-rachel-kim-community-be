@@ -7,8 +7,8 @@ export const findUserByEmail = async (email) => {
     let conn;
     try {
         conn = await pool.getConnection();
-        const rows = await conn.query('SELECT * FROM User WHERE email = ? AND deleted_at IS NULL', [email]);
-        return rows[0];
+        const [rows] = await conn.query('SELECT * FROM User WHERE email = ? AND deleted_at IS NULL', [email]);
+	return rows.length > 0 ? rows[0] : null;
     } finally {
         if (conn) conn.release();
     }
@@ -19,7 +19,7 @@ export const findUserByNickname = async (nickname) => {
     let conn;
     try {
         conn = await pool.getConnection();
-        const rows = await conn.query('SELECT * FROM User WHERE nickname = ? AND deleted_at IS NULL', [nickname]);
+        const [rows] = await conn.query('SELECT * FROM User WHERE nickname = ? AND deleted_at IS NULL', [nickname]);
         return rows[0];
     } finally {
         if (conn) conn.release();
@@ -35,6 +35,16 @@ export const verifyPassword = async (plainPassword, hashedPassword) => {
         throw error;
     }
 };
+
+// 비밀번호 검증 테스트
+const testPassword = async () => {
+    const plainPassword = "Test0910@";
+    const hashedPassword = "$2b$10$LA19ear02sfZ.FaQDB/KU.vosGPRDIYIlBJEfeO7Zr5d.XAB1gozK"; // DB에서 가져온 해시
+
+    const match = await bcrypt.compare(plainPassword, hashedPassword);
+    console.log(match ? "✅ 비밀번호 일치!" : "❌ 비밀번호 불일치!");
+};
+testPassword();
 
 // 사용자 등록
 export const saveUser = async (userData) => {
